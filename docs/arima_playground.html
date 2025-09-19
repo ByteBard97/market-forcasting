@@ -246,14 +246,14 @@
   </head>
   <body>
     <div class="container">
-      <h1>🎯 Market Forecasting Model Explorer</h1>
+      <h1>🎯 Interactive Business Forecaster</h1>
       <p class="subtitle">
-        Simulate market data and see how forecasting models learn to predict price movements
+        Simulate different business environments and see how well our forecasting models adapt to predict revenue
       </p>
 
       <div class="playground">
         <div class="panel">
-          <h3>📊 Simulated Market Data</h3>
+          <h3>📊 Simulated Daily Revenue</h3>
           <canvas id="signalCanvas" width="500" height="300"></canvas>
           <div class="signal-components" id="signalComponents">
             <div
@@ -263,12 +263,12 @@
             </div>
           </div>
           <button class="learn-btn" onclick="fitARModel()">
-            🔄 Retrain Model
+            🔄 Learn From This History
           </button>
           <div id="viewControls" style="display:none; text-align: center; margin-top: 15px;">
             <div style="display: flex; justify-content: center;">
               <button class="learn-btn" onclick="testGeneralization()" id="testBtn" style="background: #9b59b6; margin: 5px;">
-                🧪 Test on New Market Data
+                🧪 See How It Performs Next Quarter
               </button>
             </div>
             <div style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;">
@@ -282,20 +282,23 @@
             <div id="currentView" style="margin-top: 5px; font-size: 0.9em; opacity: 0.8;">
               Currently viewing: Training Data
             </div>
+            <div style="margin-top: 5px; font-size: 0.8em; opacity: 0.6; font-style: italic;">
+              Note: Predictions are visually aligned for clarity - actual forecasts inherently lag by one time step
+            </div>
           </div>
         </div>
 
         <div class="panel">
-          <h3>⚡ Forecasting Model Pattern</h3>
+          <h3>⚡ The Model's Learned Strategy</h3>
           <canvas id="kernelCanvas" width="500" height="300"></canvas>
           <div class="kernel-info">
             <div class="metric" title="How accurate the model is on training data. Lower is better. This represents the typical squared dollar error.">
               <span class="metric-value" id="mseValue">-</span>
-              <span class="metric-label">Training Accuracy 📊</span>
+              <span class="metric-label">Forecast Accuracy (Avg. $ Error) 📊</span>
             </div>
             <div class="metric" title="What pattern the model learned: High-pass (recent trends matter most), Low-pass (long-term averages), Band-pass (cyclical patterns)">
               <span class="metric-value" id="kernelType">-</span>
-              <span class="metric-label">Pattern Type 🔍</span>
+              <span class="metric-label">Model's Focus 🔍</span>
             </div>
             <div class="metric" id="genMetric" style="display:none;" title="How accurate the model is on completely new data it has never seen. This tests if the model will work in real business situations.">
               <span class="metric-value" id="genMSE">-</span>
@@ -303,8 +306,16 @@
             </div>
             <div class="metric" id="ratioMetric" style="display:none;" title="Compares training vs real-world accuracy. Under 1.5 = Good model. Over 2.5 = Overfitted (memorized noise instead of learning patterns).">
               <span class="metric-value" id="overfitRatio">-</span>
-              <span class="metric-label">Reliability Score 🎯</span>
+              <span class="metric-label">Future-Proof Score 🎯</span>
             </div>
+          </div>
+        </div>
+
+        <!-- Business Takeaway Box -->
+        <div class="panel fullwidth" id="businessTakeaway" style="display:none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; margin: 20px 0;">
+          <h3 style="color: white; text-align: center; margin-bottom: 20px;">💡 Business Takeaway</h3>
+          <div id="takeawayContent" style="font-size: 1.1em; line-height: 1.6; text-align: center; padding: 20px;">
+            <!-- Dynamic content will be inserted here -->
           </div>
         </div>
 
@@ -322,7 +333,7 @@
 
       <div class="controls">
         <h3 style="text-align: center; margin-bottom: 15px">
-          Signal Generator
+          Market Scenario Simulator
         </h3>
         <div class="preset-buttons">
           <button class="preset-btn" onclick="setSignalPreset('trend')">
@@ -348,7 +359,7 @@
         <div class="control-group">
           <div class="control">
             <label
-              >AR Order (Kernel Length): <span id="arOrderValue">8</span></label
+              >Model Memory (Lookback Period): <span id="arOrderValue">8</span></label
             >
             <input
               type="range"
@@ -371,7 +382,7 @@
             />
           </div>
           <div class="control">
-            <label>Noise Level: <span id="noiseValue">0.1</span></label>
+            <label>Market Unpredictability: <span id="noiseValue">0.1</span></label>
             <input
               type="range"
               id="noiseLevel"
@@ -382,7 +393,7 @@
             />
           </div>
           <div class="control">
-            <label>Trend Strength: <span id="trendValue">0.5</span></label>
+            <label>Market Growth / Decline: <span id="trendValue">0.5</span></label>
             <input
               type="range"
               id="trendStrength"
@@ -397,7 +408,7 @@
         <div class="control-group">
           <div class="control">
             <label
-              >Low Freq (cycles): <span id="lowFreqValue">0.05</span></label
+              >Annual Seasonality: <span id="lowFreqValue">0.05</span></label
             >
             <input
               type="range"
@@ -410,7 +421,7 @@
           </div>
           <div class="control">
             <label
-              >Mid Freq (cycles): <span id="midFreqValue">0.15</span></label
+              >Quarterly Patterns: <span id="midFreqValue">0.15</span></label
             >
             <input
               type="range"
@@ -423,7 +434,7 @@
           </div>
           <div class="control">
             <label
-              >High Freq (cycles): <span id="highFreqValue">0.4</span></label
+              >Weekly Noise / Promotions: <span id="highFreqValue">0.4</span></label
             >
             <input
               type="range"
@@ -974,10 +985,10 @@
           (x, i) => i > 0 && Math.sign(x) !== Math.sign(kernel[i - 1])
         );
 
-        let kernelType = "Balanced";
-        if (early > late * 1.5) kernelType = "High-pass";
-        else if (late > early * 1.5) kernelType = "Low-pass";
-        else if (hasOscillation) kernelType = "Band-pass";
+        let kernelType = "Focus: Balanced";
+        if (early > late * 1.5) kernelType = "Focus: Recent Trends";
+        else if (late > early * 1.5) kernelType = "Focus: Long-Term Average";
+        else if (hasOscillation) kernelType = "Focus: Cyclical Patterns";
 
         document.getElementById("kernelType").textContent = kernelType;
       }
@@ -1204,7 +1215,8 @@
         let firstPred = true;
         for (let i = arOrder; i < predictions.length; i++) {
           if (predictions[i] !== 0) {
-            const x = toX(i);
+            // Shift prediction display to the left by 1 time step for visual alignment
+            const x = toX(Math.max(0, i - 1));
             const y = toY(predictions[i]);
             if (firstPred) {
               predictionCtx.moveTo(x, y);
@@ -1382,6 +1394,46 @@
       let originalTrainingMSE = 0;
       let currentPreset = 'trend'; // Track current preset
 
+      function generateBusinessTakeaway(params, modelFocus, errorAmount, futureProofScore) {
+        // Determine market type based on parameters
+        let marketType = "Stable Market";
+        if (params.trendStrength > 1.0) marketType = "High-Growth Market";
+        else if (params.trendStrength > 0.5) marketType = "Trending Market";
+        else if (params.lowFreq > 0.1 || params.midFreq > 0.2) marketType = "Cyclical Market";
+        else if (params.noiseLevel > 0.3) marketType = "Highly Volatile Market";
+
+        // Determine reliability
+        let reliability = "";
+        let reliabilityColor = "";
+        if (futureProofScore < 1.5) {
+          reliability = "reliable";
+          reliabilityColor = "#4CAF50";
+        } else if (futureProofScore < 2.5) {
+          reliability = "moderately reliable";
+          reliabilityColor = "#FF9800";
+        } else {
+          reliability = "unreliable";
+          reliabilityColor = "#f44336";
+        }
+
+        // Generate takeaway message
+        let takeaway = `<strong>Takeaway:</strong> You trained a model during a <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-weight: bold;">${marketType}</span>. `;
+        takeaway += `Its strategy was to <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-weight: bold;">${modelFocus}</span>. `;
+        takeaway += `When tested on new data, its average error was <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-weight: bold;">±$${errorAmount.toFixed(0)}</span>. `;
+        takeaway += `The Future-Proof score of <span style="color: ${reliabilityColor}; font-weight: bold;">${futureProofScore.toFixed(1)}</span> shows this is a <span style="color: ${reliabilityColor}; font-weight: bold;">${reliability}</span> strategy for this type of market.`;
+
+        // Add business interpretation
+        if (futureProofScore >= 2.5) {
+          takeaway += `<br><br><span style="color: #ffeb3b; font-weight: bold;">⚠️ Warning:</span> This model is overfit and would not be trusted for real business decisions. Consider reducing model complexity or gathering more training data.`;
+        } else if (futureProofScore < 1.5) {
+          takeaway += `<br><br><span style="color: #4CAF50; font-weight: bold;">✅ Recommendation:</span> This model is reliable and ready for deployment in similar business environments.`;
+        }
+
+        // Display the takeaway
+        document.getElementById("takeawayContent").innerHTML = takeaway;
+        document.getElementById("businessTakeaway").style.display = "block";
+      }
+
       function testGeneralization() {
         if (kernel.length === 0) {
           alert("Please train a model first!");
@@ -1479,6 +1531,9 @@
           predictions: originalPredictions,
           errors: originalErrors
         };
+
+        // Generate business takeaway
+        generateBusinessTakeaway(params, kernelType, dollarsGenRMSE, overfitRatio);
       }
 
       // Update the existing fitARModel function to store training MSE
