@@ -200,61 +200,124 @@
         margin-top: 10px;
         font-size: 0.9em;
       }
+
+      .metric {
+        position: relative;
+        cursor: help;
+        transition: background-color 0.2s ease;
+        border-radius: 8px;
+        padding: 8px;
+      }
+
+      .metric:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .metric[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        bottom: 120%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 0.8em;
+        white-space: nowrap;
+        max-width: 250px;
+        white-space: normal;
+        width: max-content;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .metric[title]:hover::before {
+        content: '';
+        position: absolute;
+        bottom: 110%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+      }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>🎯 AR Kernel Shape Explorer</h1>
+      <h1>🎯 Market Forecasting Model Explorer</h1>
       <p class="subtitle">
-        Generate composite signals and see what kernel shapes emerge when AR
-        models learn to fit them
+        Simulate market data and see how forecasting models learn to predict price movements
       </p>
 
       <div class="playground">
         <div class="panel">
-          <h3>📊 Generated Signal</h3>
+          <h3>📊 Simulated Market Data</h3>
           <canvas id="signalCanvas" width="500" height="300"></canvas>
           <div class="signal-components" id="signalComponents">
             <div
               style="text-align: center; font-weight: bold; margin-bottom: 10px"
             >
-              Signal Components:
+              Market Factors:
             </div>
           </div>
           <button class="learn-btn" onclick="fitARModel()">
-            🧠 Learn AR Kernel
+            🔄 Retrain Model
           </button>
+          <div id="viewControls" style="display:none; text-align: center; margin-top: 15px;">
+            <div style="display: flex; justify-content: center;">
+              <button class="learn-btn" onclick="testGeneralization()" id="testBtn" style="background: #9b59b6; margin: 5px;">
+                🧪 Test on New Market Data
+              </button>
+            </div>
+            <div style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;">
+              <button class="preset-btn" onclick="showTrainingView()" id="trainViewBtn">
+                📊 Training Data View
+              </button>
+              <button class="preset-btn" onclick="showTestView()" id="testViewBtn" style="display:none;">
+                🧪 Test Data View
+              </button>
+            </div>
+            <div id="currentView" style="margin-top: 5px; font-size: 0.9em; opacity: 0.8;">
+              Currently viewing: Training Data
+            </div>
+          </div>
         </div>
 
         <div class="panel">
-          <h3>⚡ Learned Kernel Shape</h3>
+          <h3>⚡ Forecasting Model Pattern</h3>
           <canvas id="kernelCanvas" width="500" height="300"></canvas>
           <div class="kernel-info">
-            <div class="metric">
+            <div class="metric" title="How accurate the model is on training data. Lower is better. This represents the typical squared dollar error.">
               <span class="metric-value" id="mseValue">-</span>
-              <span class="metric-label">Fit MSE</span>
+              <span class="metric-label">Training Accuracy 📊</span>
             </div>
-            <div class="metric">
+            <div class="metric" title="What pattern the model learned: High-pass (recent trends matter most), Low-pass (long-term averages), Band-pass (cyclical patterns)">
               <span class="metric-value" id="kernelType">-</span>
-              <span class="metric-label">Filter Type</span>
+              <span class="metric-label">Pattern Type 🔍</span>
+            </div>
+            <div class="metric" id="genMetric" style="display:none;" title="How accurate the model is on completely new data it has never seen. This tests if the model will work in real business situations.">
+              <span class="metric-value" id="genMSE">-</span>
+              <span class="metric-label">Real-World Accuracy 🌍</span>
+            </div>
+            <div class="metric" id="ratioMetric" style="display:none;" title="Compares training vs real-world accuracy. Under 1.5 = Good model. Over 2.5 = Overfitted (memorized noise instead of learning patterns).">
+              <span class="metric-value" id="overfitRatio">-</span>
+              <span class="metric-label">Reliability Score 🎯</span>
             </div>
           </div>
         </div>
 
         <div class="panel fullwidth">
-          <h3>🎯 Model Predictions vs Reality</h3>
-          <canvas id="predictionCanvas" width="1000" height="200"></canvas>
+          <h3>🎯 Forecast vs Actual Market Prices</h3>
+          <canvas id="predictionCanvas" width="1300" height="280"></canvas>
         </div>
 
         <div class="panel fullwidth">
-          <h3>📊 Prediction Errors & Residuals</h3>
-          <canvas id="errorCanvas" width="1000" height="200"></canvas>
+          <h3>📊 Forecasting Errors ($ Difference)</h3>
+          <canvas id="errorCanvas" width="1300" height="280"></canvas>
         </div>
 
-        <div class="panel fullwidth">
-          <h3>🌊 Impulse Response & Frequency Response</h3>
-          <canvas id="responseCanvas" width="1000" height="180"></canvas>
-        </div>
       </div>
 
       <div class="controls">
@@ -386,21 +449,18 @@
       </div>
 
       <div class="explanation">
-        <h3>🧠 What You're Learning:</h3>
+        <h3>🧠 What You're Learning About Forecasting:</h3>
         <p>
-          <strong>Signal Generation:</strong> Combine trends, cycles, noise, and
-          nonlinear components to mimic real market data patterns. Each
-          component teaches the AR kernel different temporal patterns.
+          <strong>Daily Store Revenue Simulation:</strong> This generates realistic daily sales patterns ($5k-25k range) including seasonal trends, business cycles, promotional effects, and external shocks - just like real retail operations.
         </p>
         <p>
-          <strong>Kernel Shape:</strong> The learned coefficients form a
-          "temporal template" - early taps catch momentum, later taps capture
-          mean-reversion, oscillating patterns catch cycles.
+          <strong>Model Training:</strong> The forecasting algorithm learns patterns from historical daily sales - recent revenue trends, seasonal cycles, and mean reversion tendencies.
         </p>
         <p>
-          <strong>Key Insight:</strong> Different market regimes (trending,
-          cyclical, volatile) produce very different kernel shapes. This is why
-          ARIMA parameters need to be re-estimated as markets change!
+          <strong>Business Insight:</strong> Different business conditions (growth periods, seasonal downturns, promotional campaigns) require different forecasting approaches. This is why models need regular retraining as business conditions change!
+        </p>
+        <p>
+          <strong>Overfitting Risk:</strong> A model that's too complex may memorize past noise instead of learning real patterns - it looks great on old data but fails on new market conditions.
         </p>
       </div>
     </div>
@@ -415,8 +475,9 @@
       const predictionCtx = predictionCanvas.getContext("2d");
       const errorCanvas = document.getElementById("errorCanvas");
       const errorCtx = errorCanvas.getContext("2d");
-      const responseCanvas = document.getElementById("responseCanvas");
-      const responseCtx = responseCanvas.getContext("2d");
+      // Removed response canvas - too technical for MBA audience
+      // const responseCanvas = document.getElementById("responseCanvas");
+      // const responseCtx = responseCanvas.getContext("2d");
 
       // State
       let signal = [];
@@ -707,13 +768,18 @@
 
         if (signal.length === 0) return;
 
-        const margin = 40;
+        const margin = 30;
         const width = signalCanvas.width - 2 * margin;
         const height = signalCanvas.height - 2 * margin;
 
-        // Find range
-        const minVal = Math.min(...signal);
-        const maxVal = Math.max(...signal);
+        // Convert signal to realistic daily revenue range ($5k-25k)
+        const baseRevenue = 15000; // $15k baseline
+        const revenueScale = 2000; // Scale factor
+        const revenueSignal = signal.map(val => baseRevenue + (val * revenueScale));
+
+        // Find range for revenue display
+        const minVal = Math.min(...revenueSignal);
+        const maxVal = Math.max(...revenueSignal);
         const range = maxVal - minVal || 1;
 
         // Helper functions
@@ -732,15 +798,25 @@
           signalCtx.stroke();
         }
 
-        // Draw signal
+        // Draw signal using revenue values
         signalCtx.strokeStyle = "#4ECDC4";
         signalCtx.lineWidth = 2;
         signalCtx.beginPath();
-        signalCtx.moveTo(toX(0), toY(signal[0]));
-        for (let i = 1; i < signal.length; i++) {
-          signalCtx.lineTo(toX(i), toY(signal[i]));
+        signalCtx.moveTo(toX(0), toY(revenueSignal[0]));
+        for (let i = 1; i < revenueSignal.length; i++) {
+          signalCtx.lineTo(toX(i), toY(revenueSignal[i]));
         }
         signalCtx.stroke();
+
+        // Add Y-axis labels with dollar amounts
+        signalCtx.fillStyle = "rgba(255,255,255,0.8)";
+        signalCtx.font = "10px Arial";
+        signalCtx.textAlign = "right";
+        for (let i = 0; i <= 4; i++) {
+          const yPos = margin + (i / 4) * height;
+          const dollarValue = maxVal - (i / 4) * range;
+          signalCtx.fillText(`$${(dollarValue/1000).toFixed(0)}k`, margin - 10, yPos + 3);
+        }
 
         // Labels
         signalCtx.fillStyle = "white";
@@ -751,6 +827,11 @@
           signalCanvas.width / 2,
           signalCanvas.height - 5
         );
+        signalCtx.save();
+        signalCtx.translate(15, signalCanvas.height / 2);
+        signalCtx.rotate(-Math.PI / 2);
+        signalCtx.fillText("Daily Revenue ($)", 0, 0);
+        signalCtx.restore();
       }
 
       function fitARModel() {
@@ -876,10 +957,11 @@
         drawKernel();
         drawPredictions();
         drawErrors();
-        drawResponses();
+        // drawResponses(); // Removed - too technical for MBA audience
 
-        // Update metrics
-        document.getElementById("mseValue").textContent = mse.toFixed(4);
+        // Update metrics with business-friendly format
+        const dollarsRMSE = Math.sqrt(mse) * 2000; // Convert to dollar RMSE
+        document.getElementById("mseValue").textContent = `±$${dollarsRMSE.toFixed(0)}`;
 
         // Classify kernel type
         const early = kernel
@@ -970,154 +1052,9 @@
         );
       }
 
-      function drawResponses() {
-        responseCtx.clearRect(
-          0,
-          0,
-          responseCanvas.width,
-          responseCanvas.height
-        );
+      // Removed drawResponses function - too technical for MBA audience
 
-        if (kernel.length === 0) return;
-
-        const margin = 40;
-        const totalWidth = responseCanvas.width - 2 * margin;
-        const height = responseCanvas.height - 2 * margin;
-
-        // Split canvas in half
-        const impulseWidth = totalWidth / 2 - 10;
-        const freqWidth = totalWidth / 2 - 10;
-
-        // Draw impulse response (left half)
-        drawImpulseResponse(margin, margin, impulseWidth, height);
-
-        // Draw frequency response (right half)
-        drawFrequencyResponse(
-          margin + totalWidth / 2 + 10,
-          margin,
-          freqWidth,
-          height
-        );
-      }
-
-      function drawImpulseResponse(startX, startY, width, height) {
-        const steps = 50;
-        let response = [1];
-
-        // Compute impulse response
-        for (let t = 1; t < steps; t++) {
-          let val = 0;
-          for (let j = 0; j < Math.min(t, arOrder); j++) {
-            val += kernel[j] * (response[t - 1 - j] || 0);
-          }
-          response.push(val);
-        }
-
-        const maxAbs = Math.max(...response.map(Math.abs), 0.1);
-        const scale = height / (2 * maxAbs);
-        const zeroY = startY + height / 2;
-
-        // Zero line
-        responseCtx.strokeStyle = "rgba(255,255,255,0.3)";
-        responseCtx.lineWidth = 1;
-        responseCtx.beginPath();
-        responseCtx.moveTo(startX, zeroY);
-        responseCtx.lineTo(startX + width, zeroY);
-        responseCtx.stroke();
-
-        // Impulse response curve
-        responseCtx.strokeStyle = "#FF6B6B";
-        responseCtx.lineWidth = 2;
-        responseCtx.beginPath();
-
-        for (let t = 0; t < response.length; t++) {
-          const x = startX + (t / (steps - 1)) * width;
-          const y = zeroY - response[t] * scale;
-
-          if (t === 0) responseCtx.moveTo(x, y);
-          else responseCtx.lineTo(x, y);
-
-          // Points
-          responseCtx.fillStyle = t === 0 ? "#FFD93D" : "#FF6B6B";
-          responseCtx.beginPath();
-          responseCtx.arc(x, y, t === 0 ? 4 : 2, 0, 2 * Math.PI);
-          responseCtx.fill();
-        }
-        responseCtx.stroke();
-
-        // Label
-        responseCtx.fillStyle = "white";
-        responseCtx.font = "14px Arial";
-        responseCtx.textAlign = "center";
-        responseCtx.fillText(
-          "Impulse Response",
-          startX + width / 2,
-          startY - 10
-        );
-      }
-
-      function drawFrequencyResponse(startX, startY, width, height) {
-        const freqPoints = 100;
-        const frequencies = [];
-        const magnitudes = [];
-
-        // Compute frequency response
-        for (let i = 0; i < freqPoints; i++) {
-          const omega = (i / (freqPoints - 1)) * Math.PI;
-          frequencies.push(omega);
-
-          // H(e^jω) = 1 / (1 - Σ φₖ e^(-jkω))
-          let realPart = 1;
-          let imagPart = 0;
-
-          for (let k = 0; k < arOrder; k++) {
-            realPart -= kernel[k] * Math.cos((k + 1) * omega);
-            imagPart += kernel[k] * Math.sin((k + 1) * omega);
-          }
-
-          const magnitude =
-            1 / Math.sqrt(realPart * realPart + imagPart * imagPart);
-          magnitudes.push(magnitude);
-        }
-
-        const maxMag = Math.max(...magnitudes);
-        const scale = height / maxMag;
-
-        // Frequency response curve
-        responseCtx.strokeStyle = "#4ECDC4";
-        responseCtx.lineWidth = 2;
-        responseCtx.beginPath();
-
-        for (let i = 0; i < frequencies.length; i++) {
-          const x = startX + (i / (freqPoints - 1)) * width;
-          const y = startY + height - magnitudes[i] * scale;
-
-          if (i === 0) responseCtx.moveTo(x, y);
-          else responseCtx.lineTo(x, y);
-        }
-        responseCtx.stroke();
-
-        // Frequency axis
-        responseCtx.strokeStyle = "rgba(255,255,255,0.3)";
-        responseCtx.lineWidth = 1;
-        responseCtx.beginPath();
-        responseCtx.moveTo(startX, startY + height);
-        responseCtx.lineTo(startX + width, startY + height);
-        responseCtx.stroke();
-
-        // Label
-        responseCtx.fillStyle = "white";
-        responseCtx.font = "14px Arial";
-        responseCtx.textAlign = "center";
-        responseCtx.fillText(
-          "Frequency Response",
-          startX + width / 2,
-          startY - 10
-        );
-        responseCtx.font = "10px Arial";
-        responseCtx.fillText("0", startX, startY + height + 15);
-        responseCtx.fillText("π", startX + width, startY + height + 15);
-      }
+      // Removed drawImpulseResponse and drawFrequencyResponse functions - too technical for MBA audience
 
       function updateSliders() {
         document.getElementById("trendStrength").value = trendStrength;
@@ -1201,8 +1138,13 @@
         generateSignal();
       });
 
-      // Initialize
+      // Initialize - show data immediately
       generateSignal();
+
+      // Also auto-train a model so user sees something immediately
+      setTimeout(() => {
+        fitARModel();
+      }, 500);
 
       function drawPredictions() {
         predictionCtx.clearRect(
@@ -1214,7 +1156,7 @@
 
         if (predictions.length === 0) return;
 
-        const margin = 40;
+        const margin = 30;
         const width = predictionCanvas.width - 2 * margin;
         const height = predictionCanvas.height - 2 * margin;
 
@@ -1286,18 +1228,18 @@
         predictionCtx.stroke();
         predictionCtx.setLineDash([]);
 
-        // Labels
+        // Labels - spread them out to avoid overlap
         predictionCtx.fillStyle = "#4ECDC4";
         predictionCtx.font = "12px Arial";
         predictionCtx.textAlign = "left";
-        predictionCtx.fillText("Actual Signal", margin + 10, margin + 15);
+        predictionCtx.fillText("Actual Market Prices", margin + 10, margin + 15);
         predictionCtx.fillStyle = "#FF6B6B";
-        predictionCtx.fillText("AR Predictions", margin + 10, margin + 30);
+        predictionCtx.fillText("Forecast Predictions", margin + 200, margin + 15);
         predictionCtx.fillStyle = "rgba(255,255,255,0.7)";
         predictionCtx.fillText(
           "Training Region →",
           trainStartX + 5,
-          margin + 15
+          margin + 35
         );
       }
 
@@ -1306,7 +1248,7 @@
 
         if (errors.length === 0) return;
 
-        const margin = 40;
+        const margin = 30;
         const width = errorCanvas.width - 2 * margin;
         const height = errorCanvas.height - 2 * margin;
 
@@ -1370,30 +1312,48 @@
         );
         const maxAbsError = Math.max(...validErrors.map(Math.abs));
 
+        // Convert to realistic daily store revenue ($5k-25k range)
+        const baseRevenue = 15000; // $15k baseline daily revenue
+        const revenueScale = 2000; // Scale factor to get realistic range
+
+        const dollarMeanError = Math.abs(meanError * revenueScale);
+        const dollarStdError = stdError * revenueScale;
+        const dollarMaxError = maxAbsError * revenueScale;
+
         // Labels and stats
         errorCtx.fillStyle = "white";
         errorCtx.font = "12px Arial";
         errorCtx.textAlign = "left";
         errorCtx.fillText(
-          "Prediction Errors (Residuals)",
+          "Forecasting Errors: How Much Money Are We Off?",
           margin + 10,
           margin + 15
         );
-        errorCtx.font = "10px Arial";
+        errorCtx.font = "11px Arial";
         errorCtx.fillText(
-          `Mean: ${meanError.toFixed(3)}`,
+          `Avg Error: $${dollarMeanError.toFixed(2)}`,
           margin + 10,
-          margin + height - 30
+          margin + height - 35
         );
         errorCtx.fillText(
-          `Std: ${stdError.toFixed(3)}`,
-          margin + 100,
-          margin + height - 30
+          `Typical Range: ±$${dollarStdError.toFixed(2)}`,
+          margin + 140,
+          margin + height - 35
         );
         errorCtx.fillText(
-          `Max: ${maxAbsError.toFixed(3)}`,
-          margin + 180,
-          margin + height - 30
+          `Worst Error: $${dollarMaxError.toFixed(2)}`,
+          margin + 320,
+          margin + height - 35
+        );
+
+        // Add business interpretation
+        errorCtx.fillStyle = "#FFD93D";
+        errorCtx.font = "10px Arial";
+        const totalDollarImpact = dollarMeanError * validErrors.length;
+        errorCtx.fillText(
+          `Total Impact: $${totalDollarImpact.toFixed(0)} over ${validErrors.length} periods`,
+          margin + 10,
+          margin + height - 15
         );
 
         // Check for patterns in residuals
@@ -1415,6 +1375,162 @@
             margin + 350,
             margin + height - 30
           );
+        }
+      }
+
+      // Global variables for generalization testing
+      let originalTrainingMSE = 0;
+      let currentPreset = 'trend'; // Track current preset
+
+      function testGeneralization() {
+        if (kernel.length === 0) {
+          alert("Please train a model first!");
+          return;
+        }
+
+        // Store the learned kernel and original signal
+        const learnedKernel = [...kernel];
+        const originalSignal = [...signal];
+        const originalPredictions = [...predictions];
+        const originalErrors = [...errors];
+
+        // Store current parameters to regenerate with same settings
+        const params = {
+          trendStrength: trendStrength,
+          lowFreq: lowFreq,
+          midFreq: midFreq,
+          highFreq: highFreq,
+          logComponent: logComponent,
+          noiseLevel: noiseLevel,
+          signalLength: signalLength
+        };
+
+        // Generate new test data with same parameters but different random seed
+        generateSignal();
+        const testSignal = [...signal];
+
+        // Test the learned kernel on new data (no retraining!)
+        const testPredictions = new Array(testSignal.length).fill(0);
+        const testErrors = new Array(testSignal.length).fill(0);
+        let testMSE = 0;
+        let testCount = 0;
+
+        // Apply learned kernel to test data
+        for (let t = arOrder; t < testSignal.length; t++) {
+          let pred = 0;
+          for (let lag = 1; lag <= arOrder; lag++) {
+            pred += learnedKernel[lag - 1] * testSignal[t - lag];
+          }
+          testPredictions[t] = pred;
+          testErrors[t] = testSignal[t] - pred;
+          testMSE += testErrors[t] * testErrors[t];
+          testCount++;
+        }
+
+        const generalizationMSE = testCount > 0 ? testMSE / testCount : 0;
+        const overfitRatio = originalTrainingMSE > 0 ? generalizationMSE / originalTrainingMSE : 0;
+
+        // Update displays with test results
+        predictions = testPredictions;
+        errors = testErrors;
+
+        // Draw the test results
+        drawPredictions();
+        drawErrors();
+
+        // Update metrics display with business-friendly format
+        const dollarsGenRMSE = Math.sqrt(generalizationMSE) * 2000;
+        document.getElementById("genMSE").textContent = `±$${dollarsGenRMSE.toFixed(0)}`;
+        document.getElementById("overfitRatio").textContent = overfitRatio.toFixed(2);
+        document.getElementById("genMetric").style.display = "block";
+        document.getElementById("ratioMetric").style.display = "block";
+
+        // Add interpretation
+        let interpretation = "";
+        if (overfitRatio < 1.5) {
+          interpretation = " (Good!)";
+          document.getElementById("overfitRatio").style.color = "#4CAF50";
+        } else if (overfitRatio < 2.5) {
+          interpretation = " (OK)";
+          document.getElementById("overfitRatio").style.color = "#FF9800";
+        } else {
+          interpretation = " (Overfitting!)";
+          document.getElementById("overfitRatio").style.color = "#f44336";
+        }
+        document.getElementById("overfitRatio").textContent = overfitRatio.toFixed(2) + interpretation;
+
+        // Log results to console for debugging
+        console.log(`Training MSE: ${originalTrainingMSE.toFixed(4)}`);
+        console.log(`Generalization MSE: ${generalizationMSE.toFixed(4)}`);
+        console.log(`Overfitting ratio: ${overfitRatio.toFixed(2)}`);
+
+        // Update view controls
+        document.getElementById("testViewBtn").style.display = "block";
+        document.getElementById("currentView").textContent = "Currently viewing: Test Data";
+
+        // Store data for view switching
+        window.testData = {
+          signal: testSignal,
+          predictions: testPredictions,
+          errors: testErrors
+        };
+        window.trainingData = {
+          signal: originalSignal,
+          predictions: originalPredictions,
+          errors: originalErrors
+        };
+      }
+
+      // Update the existing fitARModel function to store training MSE
+      const originalFitARModel = fitARModel;
+      fitARModel = function() {
+        originalFitARModel();
+
+        // Store training MSE for comparison
+        if (errors.length > 0) {
+          let totalError = 0;
+          let errorCount = 0;
+          for (let t = arOrder; t < signal.length; t++) {
+            if (errors[t] !== undefined) {
+              totalError += errors[t] * errors[t];
+              errorCount++;
+            }
+          }
+          originalTrainingMSE = errorCount > 0 ? totalError / errorCount : 0;
+        }
+
+        // Show the test button after training
+        document.getElementById("viewControls").style.display = "block";
+      };
+
+      // View switching functions
+      function showTrainingView() {
+        if (window.trainingData) {
+          signal = window.trainingData.signal;
+          predictions = window.trainingData.predictions;
+          errors = window.trainingData.errors;
+
+          drawSignal();
+          drawPredictions();
+          drawErrors();
+          updateSignalDisplay();
+
+          document.getElementById("currentView").textContent = "Currently viewing: Training Data";
+        }
+      }
+
+      function showTestView() {
+        if (window.testData) {
+          signal = window.testData.signal;
+          predictions = window.testData.predictions;
+          errors = window.testData.errors;
+
+          drawSignal();
+          drawPredictions();
+          drawErrors();
+          updateSignalDisplay();
+
+          document.getElementById("currentView").textContent = "Currently viewing: Test Data";
         }
       }
     </script>
