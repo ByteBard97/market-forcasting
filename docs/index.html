@@ -743,47 +743,155 @@
             </div>
         </div>
 
-        <!-- Slide 9: Implementation Roadmap -->
+        <!-- Slide 9: Model Selection Guide -->
         <div class="slide">
-            <h1>🗺️ Your Roadmap to Forecasting Excellence</h1>
-            
+            <h1>🎯 Model Selection: Right Tool for the Job</h1>
+
+            <div class="highlight-box">
+                <strong>Start simple, add complexity only when needed:</strong> Each model tier adds value but requires more time. Stop when accuracy meets your business needs.
+            </div>
+
+            <div style="overflow-x: auto; margin: 20px 0;">
+                <table class="model-comparison" style="width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden;">
+                    <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        <tr>
+                            <th style="padding: 15px; text-align: left;">Model</th>
+                            <th style="padding: 15px; text-align: left;">Best For</th>
+                            <th style="padding: 15px; text-align: left;">MBA Value</th>
+                            <th style="padding: 15px; text-align: center;">Complexity</th>
+                            <th style="padding: 15px; text-align: center;">Add Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 15px;"><strong>ARIMA/ETS</strong></td>
+                            <td style="padding: 15px;">Single series, clean baseline</td>
+                            <td style="padding: 15px;">Quick insights, interpretable</td>
+                            <td style="padding: 15px; text-align: center;">⭐⭐</td>
+                            <td style="padding: 15px; text-align: center;"><span class="value-metric">Day 1</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px;"><strong>Prophet</strong></td>
+                            <td style="padding: 15px;">Business-friendly seasonality</td>
+                            <td style="padding: 15px;">Handles holidays automatically</td>
+                            <td style="padding: 15px; text-align: center;">⭐⭐</td>
+                            <td style="padding: 15px; text-align: center;"><span class="value-metric">+0.5 day</span></td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 15px;"><strong>XGBoost</strong></td>
+                            <td style="padding: 15px;">Feature-rich scenarios</td>
+                            <td style="padding: 15px;">Handles many business drivers</td>
+                            <td style="padding: 15px; text-align: center;">⭐⭐⭐</td>
+                            <td style="padding: 15px; text-align: center;"><span class="value-metric">+1 day</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px;"><strong>Global MLP</strong></td>
+                            <td style="padding: 15px;">Multi-series patterns</td>
+                            <td style="padding: 15px;">Learns from all stores/products</td>
+                            <td style="padding: 15px; text-align: center;">⭐⭐⭐⭐</td>
+                            <td style="padding: 15px; text-align: center;"><span class="value-metric">+1.5 days</span></td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 15px;"><strong>N-BEATS</strong></td>
+                            <td style="padding: 15px;">Pure forecasting excellence</td>
+                            <td style="padding: 15px;">State-of-the-art accuracy</td>
+                            <td style="padding: 15px; text-align: center;">⭐⭐⭐⭐</td>
+                            <td style="padding: 15px; text-align: center;"><span class="value-metric">+2 days</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px;"><strong>TFT</strong></td>
+                            <td style="padding: 15px;">Complex multi-variate</td>
+                            <td style="padding: 15px;">Explains what drives predictions</td>
+                            <td style="padding: 15px; text-align: center;">⭐⭐⭐⭐⭐</td>
+                            <td style="padding: 15px; text-align: center;"><span class="value-metric">+3 days</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+                <div style="background: #4CAF50; color: white; padding: 20px; border-radius: 10px;">
+                    <h3>✅ Recommended Start</h3>
+                    <p><strong>ARIMA + Prophet</strong></p>
+                    <p>Gets you 90% of the value in 1.5 days. Handles seasonality, trends, holidays. Easy to explain to stakeholders.</p>
+                </div>
+                <div style="background: #FF9800; color: white; padding: 20px; border-radius: 10px;">
+                    <h3>🚀 If You Want More</h3>
+                    <p><strong>Add XGBoost</strong></p>
+                    <p>Brings in external features (promos, weather, etc.). Best bang-for-buck ML upgrade. Total: 2.5 days.</p>
+                </div>
+            </div>
+
+            <div class="interactive-demo" style="text-align: center;">
+                <h3>💡 Decision Framework</h3>
+                <p><strong>Stop when:</strong> Current accuracy meets your decision-making needs</p>
+                <p><strong>Continue when:</strong> Forecast errors are costing you real money</p>
+                <p><strong>Red flag:</strong> Spending more time on models than using insights</p>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3>📚 Learn More (Business-Friendly Explanations)</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; font-size: 0.9em;">
+                    <div>
+                        <strong>🏁 Getting Started:</strong><br>
+                        • <a href="https://www.forecastpro.com/Trends/forecasting101August2011.html" target="_blank">ARIMA Explained Simply</a><br>
+                        • <a href="https://facebook.github.io/prophet/docs/case_studies.html" target="_blank">Prophet Business Cases</a>
+                    </div>
+                    <div>
+                        <strong>🤖 Machine Learning:</strong><br>
+                        • <a href="https://www.mckinsey.com/featured-insights/mckinsey-explainers/what-is-deep-learning" target="_blank">McKinsey: ML for Business</a><br>
+                        • <a href="https://www.kaggle.com/learn/intro-to-machine-learning" target="_blank">Interactive ML Intro</a>
+                    </div>
+                    <div>
+                        <strong>🧠 Advanced Models:</strong><br>
+                        • <a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi" target="_blank">Neural Networks (Visual)</a><br>
+                        • <a href="https://ai.googleblog.com/2021/12/interpretable-deep-learning-for-time.html" target="_blank">Google AI: Latest Methods</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Implementation Roadmap -->
+        <div class="slide">
+            <h1>🛠️ Personal Forecasting Tool Development Plan</h1>
+
             <div class="roadmap-item">
                 <div class="roadmap-number">1</div>
                 <div>
-                    <h3>Phase 1: Foundation (Month 1)</h3>
-                    <p><strong>Build trust with simple baselines</strong></p>
-                    <p>• ARIMA/ETS baselines • Data pipeline setup • Initial metrics</p>
-                    <p>Expected outcome: <span class="value-metric">12% MAPE</span> | Value: Baseline established</p>
+                    <h3>Week 1-2: MVP & Requirements</h3>
+                    <p><strong>Get the basics working fast</strong></p>
+                    <p>• Requirements gathering interview • File upload (CSV/Excel) • Basic ARIMA/ETS models</p>
+                    <p>Outcome: <span class="value-metric">Working prototype</span> | Value: Validate the concept</p>
                 </div>
             </div>
-            
+
             <div class="roadmap-item">
                 <div class="roadmap-number">2</div>
                 <div>
-                    <h3>Phase 2: Quick Wins (Month 2-3)</h3>
-                    <p><strong>Global MLP for immediate improvement</strong></p>
-                    <p>• Deploy MLP model • Add key features • A/B testing</p>
-                    <p>Expected outcome: <span class="value-metric">9% MAPE</span> | Value: $500K annual savings</p>
+                    <h3>Week 3-4: Choose Your Path</h3>
+                    <p><strong>Vue app OR PyQt6 app for Mac</strong></p>
+                    <p>• Vue: Web tech + Tauri packaging • PyQt6: Python ML + native UI</p>
+                    <p>Outcome: <span class="value-metric">Polished tool</span> | Value: Easy experimentation with your data</p>
                 </div>
             </div>
-            
+
             <div class="roadmap-item">
                 <div class="roadmap-number">3</div>
                 <div>
-                    <h3>Phase 3: Excellence (Month 4-6)</h3>
-                    <p><strong>State-of-the-art with N-BEATS/TFT</strong></p>
-                    <p>• Advanced architectures • Uncertainty quantification • Production deployment</p>
-                    <p>Expected outcome: <span class="value-metric">7% MAPE</span> | Value: $1M+ annual savings</p>
+                    <h3>Month 2: Enhanced Models (Optional)</h3>
+                    <p><strong>Add ML models if simple ones aren't enough</strong></p>
+                    <p>• Prophet for complex seasonality • XGBoost for non-linear patterns • N-BEATS if you're feeling fancy</p>
+                    <p>Outcome: <span class="value-metric">Better accuracy</span> | Value: More sophisticated insights</p>
                 </div>
             </div>
-            
+
             <div class="roadmap-item">
                 <div class="roadmap-number">4</div>
                 <div>
-                    <h3>Phase 4: Scale (Month 6+)</h3>
-                    <p><strong>Enterprise-wide deployment</strong></p>
-                    <p>• Automated retraining • Real-time predictions • Dashboard integration</p>
-                    <p>Expected outcome: <span class="value-metric">6% MAPE</span> | Value: $2M+ annual impact</p>
+                    <h3>Future: Data Sources (If Valuable)</h3>
+                    <p><strong>Connect to market APIs if manual uploads get tedious</strong></p>
+                    <p>• Auto-import sales data • Economic indicators • Weather/events data</p>
+                    <p>Outcome: <span class="value-metric">Automated workflow</span> | Value: Less manual work, richer models</p>
                 </div>
             </div>
         </div>
