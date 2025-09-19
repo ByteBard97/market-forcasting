@@ -336,29 +336,29 @@
           Market Scenario Simulator
         </h3>
         <div class="preset-buttons">
-          <button class="preset-btn" onclick="setSignalPreset('trend')">
+          <button class="preset-btn" onclick="setSignalPreset('trend')" title="Simulate a market with steady upward growth - like a successful tech startup or expanding retail chain">
             📈 Trending Market
           </button>
-          <button class="preset-btn" onclick="setSignalPreset('cyclical')">
+          <button class="preset-btn" onclick="setSignalPreset('cyclical')" title="Simulate regular business cycles - like seasonal retail sales or quarterly earnings patterns">
             🔄 Business Cycles
           </button>
-          <button class="preset-btn" onclick="setSignalPreset('volatility')">
+          <button class="preset-btn" onclick="setSignalPreset('volatility')" title="Simulate periods of high and low market activity - like calm periods followed by busy seasons">
             📈📉 Volatility Clustering
           </button>
-          <button class="preset-btn" onclick="setSignalPreset('seasonal')">
+          <button class="preset-btn" onclick="setSignalPreset('seasonal')" title="Combine long-term growth with seasonal patterns - like a growing business with summer peaks">
             🌊 Seasonal + Trend
           </button>
-          <button class="preset-btn" onclick="setSignalPreset('arma')">
+          <button class="preset-btn" onclick="setSignalPreset('arma')" title="Complex market dynamics where recent performance affects future results - like customer loyalty effects">
             🎛️ ARMA(2,1) Process
           </button>
-          <button class="preset-btn" onclick="setSignalPreset('jumps')">
+          <button class="preset-btn" onclick="setSignalPreset('jumps')" title="Market with sudden unexpected events - like viral marketing campaigns or supply chain disruptions">
             ⚡ Jump Diffusion
           </button>
         </div>
 
         <div class="control-group">
           <div class="control">
-            <label
+            <label title="How many past days/weeks does the model consider? A shorter memory reacts quickly to new trends, while a longer memory focuses on stable, long-term patterns."
               >Model Memory (Lookback Period): <span id="arOrderValue">8</span></label
             >
             <input
@@ -371,7 +371,7 @@
             />
           </div>
           <div class="control">
-            <label>Signal Length: <span id="lengthValue">200</span></label>
+            <label title="How much historical data to simulate. More data helps the model learn better patterns but takes longer to process.">Signal Length: <span id="lengthValue">200</span></label>
             <input
               type="range"
               id="signalLength"
@@ -382,7 +382,7 @@
             />
           </div>
           <div class="control">
-            <label>Market Unpredictability: <span id="noiseValue">0.1</span></label>
+            <label title="How much random, day-to-day fluctuation is in the market? High unpredictability makes forecasting harder but more realistic.">Market Unpredictability: <span id="noiseValue">0.1</span></label>
             <input
               type="range"
               id="noiseLevel"
@@ -393,7 +393,7 @@
             />
           </div>
           <div class="control">
-            <label>Market Growth / Decline: <span id="trendValue">0.5</span></label>
+            <label title="Controls the underlying growth rate of the business. Is it a high-growth startup (high values) or a stable, mature company (low values)?">Market Growth / Decline: <span id="trendValue">0.5</span></label>
             <input
               type="range"
               id="trendStrength"
@@ -407,7 +407,7 @@
 
         <div class="control-group">
           <div class="control">
-            <label
+            <label title="Yearly patterns like holiday sales peaks, summer tourism spikes, or back-to-school seasons."
               >Annual Seasonality: <span id="lowFreqValue">0.05</span></label
             >
             <input
@@ -420,7 +420,7 @@
             />
           </div>
           <div class="control">
-            <label
+            <label title="Business quarter effects like end-of-quarter sales pushes, quarterly earnings impacts, or seasonal inventory cycles."
               >Quarterly Patterns: <span id="midFreqValue">0.15</span></label
             >
             <input
@@ -433,7 +433,7 @@
             />
           </div>
           <div class="control">
-            <label
+            <label title="Short-term effects like weekend sales spikes, weekly promotions, payroll cycles, or day-of-week patterns."
               >Weekly Noise / Promotions: <span id="highFreqValue">0.4</span></label
             >
             <input
@@ -446,7 +446,7 @@
             />
           </div>
           <div class="control">
-            <label>Log Component: <span id="logValue">0.0</span></label>
+            <label title="Mathematical transformation that can help with exponential growth patterns. Usually keep at 0 unless modeling explosive growth scenarios.">Log Component: <span id="logValue">0.0</span></label>
             <input
               type="range"
               id="logComponent"
