@@ -458,7 +458,109 @@
             </div>
         </div>
 
-        <!-- Slide 4: Model Landscape -->
+        <!-- Slide 4: Data Requirements -->
+        <div class="slide">
+            <h1>📋 Data Requirements: What You Need (And What We Can Handle)</h1>
+
+            <div class="highlight-box">
+                <strong>Bottom Line:</strong> You don't need perfect data. We'll work with what you have and tell you how to make it better.
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+                <div style="background: #4CAF50; color: white; padding: 25px; border-radius: 15px;">
+                    <h3>✅ Ideal Data</h3>
+                    <ul style="margin: 15px 0; line-height: 1.8;">
+                        <li><strong>36+ months</strong> of history</li>
+                        <li><strong>Monthly or weekly</strong> frequency</li>
+                        <li><strong>Consistent format:</strong> date, value, category</li>
+                        <li><strong>Few gaps:</strong> &lt;10% missing values</li>
+                        <li><strong>Clean outliers:</strong> No obvious data errors</li>
+                    </ul>
+                    <p style="margin-top: 20px; font-style: italic;">This gets you the best possible forecasts</p>
+                </div>
+
+                <div style="background: #FF9800; color: white; padding: 25px; border-radius: 15px;">
+                    <h3>⚠️ Minimum Viable</h3>
+                    <ul style="margin: 15px 0; line-height: 1.8;">
+                        <li><strong>12+ months</strong> of history</li>
+                        <li><strong>Any frequency</strong> (we'll resample)</li>
+                        <li><strong>Basic format:</strong> Excel/CSV with dates</li>
+                        <li><strong>Some gaps:</strong> &lt;30% missing (we'll fill)</li>
+                        <li><strong>Messy outliers:</strong> We'll detect and flag</li>
+                    </ul>
+                    <p style="margin-top: 20px; font-style: italic;">Still useful, just less confident</p>
+                </div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0;">
+                <h3>📁 File Formats We Handle</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 15px 0;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2em;">📊</div>
+                        <strong>Excel (.xlsx, .xls)</strong>
+                        <p style="font-size: 0.9em; color: #666;">Multiple sheets OK, we'll help pick the right one</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2em;">📄</div>
+                        <strong>CSV Files</strong>
+                        <p style="font-size: 0.9em; color: #666;">Any delimiter, UTF-8 or Excel encoding</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2em;">🗃️</div>
+                        <strong>Database Export</strong>
+                        <p style="font-size: 0.9em; color: #666;">SQL query results, Access exports</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px;">
+                <h3>🔧 Data Issues We Fix Automatically</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>Missing Values</h4>
+                        <ul style="line-height: 1.6;">
+                            <li>Forward fill recent values</li>
+                            <li>Seasonal interpolation</li>
+                            <li>Flag and explain gaps</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Outliers & Anomalies</h4>
+                        <ul style="line-height: 1.6;">
+                            <li>Statistical outlier detection</li>
+                            <li>Business rule validation</li>
+                            <li>Flag for your review</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Irregular Timing</h4>
+                        <ul style="line-height: 1.6;">
+                            <li>Daily → Monthly aggregation</li>
+                            <li>Fiscal → Calendar year</li>
+                            <li>Holiday period handling</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Multiple Categories</h4>
+                        <ul style="line-height: 1.6;">
+                            <li>Store-by-store forecasts</li>
+                            <li>Product category splits</li>
+                            <li>Regional aggregation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #FFF3CD; border: 2px solid #FFEAA7; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3 style="color: #856404;">💡 Pro Tip: Start With What You Have</h3>
+                <p style="color: #856404; margin: 10px 0; line-height: 1.6;">
+                    Don't wait for "perfect" data. Upload what you have now, and we'll show you exactly what's missing or could be improved.
+                    Most business data is messier than you think, and our tool is designed for real-world messiness.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Model Landscape -->
         <div class="slide">
             <h1>🎯 Model Selection: Right Tool for the Job</h1>
             
