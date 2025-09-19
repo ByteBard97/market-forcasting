@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AR Kernel Learning Playground</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 2.5em;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .subtitle {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 1.1em;
+        opacity: 0.9;
+      }
+      .playground {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+      .panel {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 15px;
+        padding: 20px;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .panel h3 {
+        margin-top: 0;
+        font-size: 1.3em;
+        text-align: center;
+        margin-bottom: 15px;
+      }
+      canvas {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        display: block;
+        margin: 0 auto;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+      .controls {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+      .control-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .control {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .control label {
+        font-weight: 600;
+        font-size: 0.9em;
+      }
+      input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 8px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        outline: none;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #ffffff;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+      input[type="range"]::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #ffffff;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+      .preset-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 15px;
+      }
+      .preset-btn {
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 20px;
+        color: white;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: all 0.3s ease;
+      }
+      .preset-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+      .metric {
+        text-align: center;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        border-radius: 10px;
+      }
+      .metric-value {
+        font-size: 1.4em;
+        font-weight: bold;
+        display: block;
+      }
+      .metric-label {
+        font-size: 0.8em;
+        opacity: 0.8;
+      }
+      .explanation {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+        border-left: 4px solid #ffffff;
+      }
+      .fullwidth {
+        grid-column: 1 / -1;
+      }
+      .signal-components {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 10px;
+        font-size: 0.9em;
+      }
+      .component {
+        margin: 5px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .component-name {
+        font-weight: bold;
+      }
+      .learn-btn {
+        background: #4ecdc4;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 10px auto;
+        display: block;
+      }
+      .learn-btn:hover {
+        background: #45b7b8;
+        transform: scale(1.05);
+      }
+      .kernel-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 10px;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎯 AR Kernel Shape Explorer</h1>
+      <p class="subtitle">
+        Generate composite signals and see what kernel shapes emerge when AR
+        models learn to fit them
+      </p>
+
+      <div class="playground">
+        <div class="panel">
+          <h3>📊 Generated Signal</h3>
+          <canvas id="signalCanvas" width="500" height="300"></canvas>
+          <div class="signal-components" id="signalComponents">
+            <div
+              style="text-align: center; font-weight: bold; margin-bottom: 10px"
+            >
+              Signal Components:
+            </div>
+          </div>
+          <button class="learn-btn" onclick="fitARModel()">
+            🧠 Learn AR Kernel
+          </button>
+        </div>
+
+        <div class="panel">
+          <h3>⚡ Learned Kernel Shape</h3>
+          <canvas id="kernelCanvas" width="500" height="300"></canvas>
+          <div class="kernel-info">
+            <div class="metric">
+              <span class="metric-value" id="mseValue">-</span>
+              <span class="metric-label">Fit MSE</span>
+            </div>
+            <div class="metric">
+              <span class="metric-value" id="kernelType">-</span>
+              <span class="metric-label">Filter Type</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel fullwidth">
+          <h3>🎯 Model Predictions vs Reality</h3>
+          <canvas id="predictionCanvas" width="1000" height="200"></canvas>
+        </div>
+
+        <div class="panel fullwidth">
+          <h3>📊 Prediction Errors & Residuals</h3>
+          <canvas id="errorCanvas" width="1000" height="200"></canvas>
+        </div>
+
+        <div class="panel fullwidth">
+          <h3>🌊 Impulse Response & Frequency Response</h3>
+          <canvas id="responseCanvas" width="1000" height="180"></canvas>
+        </div>
+      </div>
+
+      <div class="controls">
+        <h3 style="text-align: center; margin-bottom: 15px">
+          Signal Generator
+        </h3>
+        <div class="preset-buttons">
+          <button class="preset-btn" onclick="setSignalPreset('trend')">
+            📈 Trending Market
+          </button>
+          <button class="preset-btn" onclick="setSignalPreset('cyclical')">
+            🔄 Business Cycles
+          </button>
+          <button class="preset-btn" onclick="setSignalPreset('volatility')">
+            📈📉 Volatility Clustering
+          </button>
+          <button class="preset-btn" onclick="setSignalPreset('seasonal')">
+            🌊 Seasonal + Trend
+          </button>
+          <button class="preset-btn" onclick="setSignalPreset('arma')">
+            🎛️ ARMA(2,1) Process
+          </button>
+          <button class="preset-btn" onclick="setSignalPreset('jumps')">
+            ⚡ Jump Diffusion
+          </button>
+        </div>
+
+        <div class="control-group">
+          <div class="control">
+            <label
+              >AR Order (Kernel Length): <span id="arOrderValue">8</span></label
+            >
+            <input
+              type="range"
+              id="arOrder"
+              min="2"
+              max="20"
+              step="1"
+              value="8"
+            />
+          </div>
+          <div class="control">
+            <label>Signal Length: <span id="lengthValue">200</span></label>
+            <input
+              type="range"
+              id="signalLength"
+              min="100"
+              max="500"
+              step="50"
+              value="200"
+            />
+          </div>
+          <div class="control">
+            <label>Noise Level: <span id="noiseValue">0.1</span></label>
+            <input
+              type="range"
+              id="noiseLevel"
+              min="0"
+              max="0.5"
+              step="0.05"
+              value="0.1"
+            />
+          </div>
+          <div class="control">
+            <label>Trend Strength: <span id="trendValue">0.5</span></label>
+            <input
+              type="range"
+              id="trendStrength"
+              min="0"
+              max="2"
+              step="0.1"
+              value="0.5"
+            />
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control">
+            <label
+              >Low Freq (cycles): <span id="lowFreqValue">0.05</span></label
+            >
+            <input
+              type="range"
+              id="lowFreq"
+              min="0"
+              max="0.2"
+              step="0.01"
+              value="0.05"
+            />
+          </div>
+          <div class="control">
+            <label
+              >Mid Freq (cycles): <span id="midFreqValue">0.15</span></label
+            >
+            <input
+              type="range"
+              id="midFreq"
+              min="0"
+              max="0.5"
+              step="0.01"
+              value="0.15"
+            />
+          </div>
+          <div class="control">
+            <label
+              >High Freq (cycles): <span id="highFreqValue">0.4</span></label
+            >
+            <input
+              type="range"
+              id="highFreq"
+              min="0"
+              max="1"
+              step="0.05"
+              value="0.4"
+            />
+          </div>
+          <div class="control">
+            <label>Log Component: <span id="logValue">0.0</span></label>
+            <input
+              type="range"
+              id="logComponent"
+              min="0"
+              max="1"
+              step="0.1"
+              value="0.0"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="explanation">
+        <h3>🧠 What You're Learning:</h3>
+        <p>
+          <strong>Signal Generation:</strong> Combine trends, cycles, noise, and
+          nonlinear components to mimic real market data patterns. Each
+          component teaches the AR kernel different temporal patterns.
+        </p>
+        <p>
+          <strong>Kernel Shape:</strong> The learned coefficients form a
+          "temporal template" - early taps catch momentum, later taps capture
+          mean-reversion, oscillating patterns catch cycles.
+        </p>
+        <p>
+          <strong>Key Insight:</strong> Different market regimes (trending,
+          cyclical, volatile) produce very different kernel shapes. This is why
+          ARIMA parameters need to be re-estimated as markets change!
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // Canvas setup
+      const signalCanvas = document.getElementById("signalCanvas");
+      const signalCtx = signalCanvas.getContext("2d");
+      const kernelCanvas = document.getElementById("kernelCanvas");
+      const kernelCtx = kernelCanvas.getContext("2d");
+      const predictionCanvas = document.getElementById("predictionCanvas");
+      const predictionCtx = predictionCanvas.getContext("2d");
+      const errorCanvas = document.getElementById("errorCanvas");
+      const errorCtx = errorCanvas.getContext("2d");
+      const responseCanvas = document.getElementById("responseCanvas");
+      const responseCtx = responseCanvas.getContext("2d");
+
+      // State
+      let signal = [];
+      let kernel = [];
+      let predictions = [];
+      let errors = [];
+      let arOrder = 8;
+      let signalLength = 200;
+      let noiseLevel = 0.1;
+      let trendStrength = 0.5;
+      let lowFreq = 0.05;
+      let midFreq = 0.15;
+      let highFreq = 0.4;
+      let logComponent = 0.0;
+      let signalComponents = [];
+
+      // Signal generation - more realistic market-like behavior
+      function generateSignal() {
+        signal = [];
+        signalComponents = [];
+
+        // Initialize with starting value
+        signal.push(0);
+
+        // Random walk component (most important for realistic behavior)
+        const walkStrength = 0.3;
+        let cumulativeWalk = 0;
+        for (let i = 1; i < signalLength; i++) {
+          cumulativeWalk += (Math.random() - 0.5) * walkStrength;
+          signal.push(cumulativeWalk);
+        }
+        signalComponents.push({
+          name: "Random Walk",
+          strength: walkStrength.toFixed(2),
+        });
+
+        // Add drift/trend component
+        if (trendStrength > 0) {
+          for (let i = 0; i < signalLength; i++) {
+            // Non-linear trend with some curvature
+            const trendValue =
+              trendStrength * (i / signalLength) +
+              0.2 * trendStrength * Math.pow(i / signalLength, 2);
+            signal[i] += trendValue;
+          }
+          signalComponents.push({
+            name: "Drift + Curvature",
+            strength: trendStrength.toFixed(2),
+          });
+        }
+
+        // Add very subtle long-term cycles (much weaker than before)
+        if (lowFreq > 0) {
+          for (let i = 0; i < signalLength; i++) {
+            // Much weaker amplitude and add phase randomness
+            const phaseShift = Math.random() * Math.PI;
+            const amplitude =
+              0.15 * Math.sin(2 * Math.PI * lowFreq * i + phaseShift);
+            signal[i] += amplitude;
+          }
+          signalComponents.push({
+            name: "Subtle Long Cycle",
+            freq: lowFreq.toFixed(3),
+          });
+        }
+
+        // Add regime changes (sudden shifts in trend)
+        const numRegimes = Math.floor(signalLength / 50);
+        for (let r = 0; r < numRegimes; r++) {
+          const changePoint = Math.floor(
+            ((r + 0.5) * signalLength) / numRegimes
+          );
+          const shiftMagnitude = (Math.random() - 0.5) * 0.8;
+          for (let i = changePoint; i < signalLength; i++) {
+            signal[i] += shiftMagnitude * Math.exp(-(i - changePoint) / 20);
+          }
+        }
+        if (numRegimes > 0) {
+          signalComponents.push({ name: "Regime Changes", count: numRegimes });
+        }
+
+        // Add volatility clustering (periods of high/low volatility)
+        let volatilityState = 1.0;
+        for (let i = 1; i < signalLength; i++) {
+          // Volatility follows its own AR process
+          volatilityState =
+            0.95 * volatilityState + 0.05 * (Math.random() + 0.5);
+          const volatilityNoise =
+            (Math.random() - 0.5) * noiseLevel * volatilityState;
+          signal[i] += volatilityNoise;
+        }
+        signalComponents.push({
+          name: "Vol Clustering",
+          level: noiseLevel.toFixed(2),
+        });
+
+        // Add occasional jumps (market shocks)
+        const jumpProb = 0.05;
+        for (let i = 1; i < signalLength; i++) {
+          if (Math.random() < jumpProb) {
+            const jumpSize = (Math.random() - 0.5) * 1.5;
+            signal[i] += jumpSize;
+          }
+        }
+        signalComponents.push({
+          name: "Occasional Jumps",
+          prob: jumpProb.toFixed(2),
+        });
+
+        // Add very subtle mid-frequency component (much weaker)
+        if (midFreq > 0) {
+          for (let i = 0; i < signalLength; i++) {
+            const amplitude =
+              0.08 * Math.sin(2 * Math.PI * midFreq * i + Math.random());
+            signal[i] += amplitude;
+          }
+          signalComponents.push({
+            name: "Weak Mid Cycle",
+            freq: midFreq.toFixed(3),
+          });
+        }
+
+        updateSignalDisplay();
+      }
+
+      function setSignalPreset(preset) {
+        switch (preset) {
+          case "trend":
+            // Strong upward trending market with random walk
+            trendStrength = 1.5;
+            lowFreq = 0.01; // Very subtle long cycles
+            midFreq = 0.03; // Barely noticeable
+            highFreq = 0.0; // No artificial high freq
+            logComponent = 0.0;
+            noiseLevel = 0.2;
+            break;
+          case "cyclical":
+            // Business cycle dominated (but still mostly random walk)
+            trendStrength = 0.3;
+            lowFreq = 0.04; // Stronger business cycle
+            midFreq = 0.08;
+            highFreq = 0.0;
+            logComponent = 0.0;
+            noiseLevel = 0.15;
+            break;
+          case "volatility":
+            // High volatility periods with clustering
+            trendStrength = 0.1;
+            lowFreq = 0.0;
+            midFreq = 0.0;
+            highFreq = 0.0;
+            logComponent = 0.0;
+            noiseLevel = 0.4; // High noise for vol clustering
+            break;
+          case "seasonal":
+            // More realistic seasonal patterns
+            trendStrength = 0.6;
+            lowFreq = 0.06; // Annual-like cycles
+            midFreq = 0.25; // Quarterly-like
+            highFreq = 0.0;
+            logComponent = 0.0;
+            noiseLevel = 0.12;
+            break;
+          case "arma":
+            // Generate ARMA(2,1) process
+            generateARMASignal();
+            return;
+          case "jumps":
+            generateJumpDiffusionSignal();
+            return;
+        }
+
+        updateSliders();
+        generateSignal();
+      }
+
+      function generateARMASignal() {
+        // ARMA(2,1) with specific coefficients
+        const arCoeffs = [0.6, -0.2];
+        const maCoeffs = [0.4];
+
+        signal = [];
+        const innovations = Array.from(
+          { length: signalLength },
+          () => (Math.random() - 0.5) * noiseLevel
+        );
+
+        // Initialize
+        signal.push(innovations[0]);
+        signal.push(
+          arCoeffs[0] * signal[0] +
+            innovations[1] +
+            maCoeffs[0] * innovations[0]
+        );
+
+        // Generate rest of series
+        for (let t = 2; t < signalLength; t++) {
+          let value =
+            arCoeffs[0] * signal[t - 1] +
+            arCoeffs[1] * signal[t - 2] +
+            innovations[t];
+          if (t > 0) value += maCoeffs[0] * innovations[t - 1];
+          signal.push(value);
+        }
+
+        signalComponents = [
+          { name: "ARMA(2,1) Process", detail: "φ₁=0.6, φ₂=-0.2, θ₁=0.4" },
+          { name: "White Noise", level: noiseLevel.toFixed(2) },
+        ];
+
+        updateSignalDisplay();
+      }
+
+      function generateJumpDiffusionSignal() {
+        signal = [0];
+        const dt = 1.0; // Each time step
+        const drift = 0.02; // Slight upward drift
+        const volatility = 0.25; // Base volatility
+        const jumpIntensity = 0.08; // 8% chance per period
+        const jumpMean = 0.0;
+        const jumpStd = 0.4;
+
+        for (let t = 1; t < signalLength; t++) {
+          // Geometric Brownian motion component
+          const dW = Math.sqrt(dt) * (Math.random() - 0.5) * 2;
+          let dS = drift * dt + volatility * dW;
+
+          // Jump component (market crashes/rallies)
+          if (Math.random() < jumpIntensity * dt) {
+            const jumpSize = jumpMean + jumpStd * (Math.random() - 0.5) * 2;
+            dS += jumpSize;
+          }
+
+          signal.push(signal[t - 1] + dS);
+        }
+
+        // Add some volatility clustering
+        for (let t = 1; t < signalLength; t++) {
+          const volCluster =
+            0.1 * Math.abs(signal[t - 1] - (signal[t - 2] || 0));
+          signal[t] += (Math.random() - 0.5) * volCluster;
+        }
+
+        signalComponents = [
+          { name: "Random Walk + Drift", rate: drift.toFixed(3) },
+          {
+            name: "Jump Events",
+            intensity: `${(jumpIntensity * 100).toFixed(1)}%`,
+          },
+          { name: "Vol Clustering", level: volatility.toFixed(2) },
+          { name: "Base Noise", level: noiseLevel.toFixed(2) },
+        ];
+
+        updateSignalDisplay();
+      }
+
+      function updateSignalDisplay() {
+        drawSignal();
+        updateComponentsDisplay();
+      }
+
+      function updateComponentsDisplay() {
+        const container = document.getElementById("signalComponents");
+        container.innerHTML =
+          '<div style="text-align: center; font-weight: bold; margin-bottom: 10px;">Signal Components:</div>';
+
+        signalComponents.forEach((comp) => {
+          const div = document.createElement("div");
+          div.className = "component";
+
+          let detail = "";
+          if (comp.strength) detail = `Strength: ${comp.strength}`;
+          else if (comp.freq) detail = `Freq: ${comp.freq}`;
+          else if (comp.level) detail = `Level: ${comp.level}`;
+          else if (comp.rate) detail = `Rate: ${comp.rate}`;
+          else if (comp.detail) detail = comp.detail;
+
+          div.innerHTML = `
+                    <span class="component-name">${comp.name}</span>
+                    <span>${detail}</span>
+                `;
+          container.appendChild(div);
+        });
+      }
+
+      function drawSignal() {
+        signalCtx.clearRect(0, 0, signalCanvas.width, signalCanvas.height);
+
+        if (signal.length === 0) return;
+
+        const margin = 40;
+        const width = signalCanvas.width - 2 * margin;
+        const height = signalCanvas.height - 2 * margin;
+
+        // Find range
+        const minVal = Math.min(...signal);
+        const maxVal = Math.max(...signal);
+        const range = maxVal - minVal || 1;
+
+        // Helper functions
+        const toX = (i) => margin + (i / (signal.length - 1)) * width;
+        const toY = (val) =>
+          margin + height - ((val - minVal) / range) * height;
+
+        // Draw grid
+        signalCtx.strokeStyle = "rgba(255,255,255,0.2)";
+        signalCtx.lineWidth = 1;
+        for (let i = 0; i <= 5; i++) {
+          const y = margin + (i / 5) * height;
+          signalCtx.beginPath();
+          signalCtx.moveTo(margin, y);
+          signalCtx.lineTo(margin + width, y);
+          signalCtx.stroke();
+        }
+
+        // Draw signal
+        signalCtx.strokeStyle = "#4ECDC4";
+        signalCtx.lineWidth = 2;
+        signalCtx.beginPath();
+        signalCtx.moveTo(toX(0), toY(signal[0]));
+        for (let i = 1; i < signal.length; i++) {
+          signalCtx.lineTo(toX(i), toY(signal[i]));
+        }
+        signalCtx.stroke();
+
+        // Labels
+        signalCtx.fillStyle = "white";
+        signalCtx.font = "12px Arial";
+        signalCtx.textAlign = "center";
+        signalCtx.fillText(
+          "Time →",
+          signalCanvas.width / 2,
+          signalCanvas.height - 5
+        );
+      }
+
+      function fitARModel() {
+        if (signal.length < arOrder + 1) {
+          alert("Signal too short for AR order");
+          return;
+        }
+
+        // Build design matrix and target vector using Yule-Walker
+        const n = signal.length - arOrder;
+        const X = [];
+        const y = [];
+
+        for (let t = arOrder; t < signal.length; t++) {
+          const row = [];
+          for (let lag = 1; lag <= arOrder; lag++) {
+            row.push(signal[t - lag]);
+          }
+          X.push(row);
+          y.push(signal[t]);
+        }
+
+        // Solve normal equations: (X'X)φ = X'y
+        kernel = solveNormalEquations(X, y);
+
+        // Generate predictions and calculate errors
+        predictions = new Array(signal.length).fill(0);
+        errors = new Array(signal.length).fill(0);
+
+        // Make predictions for the training period
+        let totalError = 0;
+        let errorCount = 0;
+
+        for (let t = arOrder; t < signal.length; t++) {
+          let pred = 0;
+          for (let lag = 1; lag <= arOrder; lag++) {
+            pred += kernel[lag - 1] * signal[t - lag];
+          }
+          predictions[t] = pred;
+          errors[t] = signal[t] - pred;
+          totalError += errors[t] * errors[t];
+          errorCount++;
+        }
+
+        const mse = errorCount > 0 ? totalError / errorCount : 0;
+
+        updateKernelDisplay(mse);
+      }
+
+      function solveNormalEquations(X, y) {
+        // Simple implementation of (X'X)^-1 X'y
+        const p = X[0].length;
+        const n = X.length;
+
+        // Compute X'X
+        const XTX = Array(p)
+          .fill()
+          .map(() => Array(p).fill(0));
+        for (let i = 0; i < p; i++) {
+          for (let j = 0; j < p; j++) {
+            for (let k = 0; k < n; k++) {
+              XTX[i][j] += X[k][i] * X[k][j];
+            }
+          }
+        }
+
+        // Compute X'y
+        const XTy = Array(p).fill(0);
+        for (let i = 0; i < p; i++) {
+          for (let k = 0; k < n; k++) {
+            XTy[i] += X[k][i] * y[k];
+          }
+        }
+
+        // Solve using Gaussian elimination (simplified)
+        return gaussianElimination(XTX, XTy);
+      }
+
+      function gaussianElimination(A, b) {
+        const n = A.length;
+
+        // Forward elimination
+        for (let i = 0; i < n; i++) {
+          // Find pivot
+          let maxRow = i;
+          for (let k = i + 1; k < n; k++) {
+            if (Math.abs(A[k][i]) > Math.abs(A[maxRow][i])) {
+              maxRow = k;
+            }
+          }
+
+          // Swap rows
+          [A[i], A[maxRow]] = [A[maxRow], A[i]];
+          [b[i], b[maxRow]] = [b[maxRow], b[i]];
+
+          // Make all rows below this one 0 in current column
+          for (let k = i + 1; k < n; k++) {
+            if (Math.abs(A[i][i]) < 1e-10) continue; // Skip if pivot is too small
+            const c = A[k][i] / A[i][i];
+            for (let j = i; j < n; j++) {
+              A[k][j] -= c * A[i][j];
+            }
+            b[k] -= c * b[i];
+          }
+        }
+
+        // Back substitution
+        const x = new Array(n).fill(0);
+        for (let i = n - 1; i >= 0; i--) {
+          x[i] = b[i];
+          for (let j = i + 1; j < n; j++) {
+            x[i] -= A[i][j] * x[j];
+          }
+          if (Math.abs(A[i][i]) > 1e-10) {
+            x[i] /= A[i][i];
+          }
+        }
+
+        return x;
+      }
+
+      function updateKernelDisplay(mse) {
+        drawKernel();
+        drawPredictions();
+        drawErrors();
+        drawResponses();
+
+        // Update metrics
+        document.getElementById("mseValue").textContent = mse.toFixed(4);
+
+        // Classify kernel type
+        const early = kernel
+          .slice(0, Math.floor(arOrder / 3))
+          .reduce((a, b) => a + Math.abs(b), 0);
+        const late = kernel
+          .slice(Math.floor((arOrder * 2) / 3))
+          .reduce((a, b) => a + Math.abs(b), 0);
+        const hasOscillation = kernel.some(
+          (x, i) => i > 0 && Math.sign(x) !== Math.sign(kernel[i - 1])
+        );
+
+        let kernelType = "Balanced";
+        if (early > late * 1.5) kernelType = "High-pass";
+        else if (late > early * 1.5) kernelType = "Low-pass";
+        else if (hasOscillation) kernelType = "Band-pass";
+
+        document.getElementById("kernelType").textContent = kernelType;
+      }
+
+      function drawKernel() {
+        kernelCtx.clearRect(0, 0, kernelCanvas.width, kernelCanvas.height);
+
+        if (kernel.length === 0) return;
+
+        const margin = 40;
+        const width = kernelCanvas.width - 2 * margin;
+        const height = kernelCanvas.height - 2 * margin;
+
+        const maxAbs = Math.max(...kernel.map(Math.abs), 0.1);
+        const scale = height / (2 * maxAbs);
+        const zeroY = margin + height / 2;
+
+        // Draw zero line
+        kernelCtx.strokeStyle = "rgba(255,255,255,0.3)";
+        kernelCtx.lineWidth = 1;
+        kernelCtx.beginPath();
+        kernelCtx.moveTo(margin, zeroY);
+        kernelCtx.lineTo(margin + width, zeroY);
+        kernelCtx.stroke();
+
+        // Draw kernel coefficients
+        const barWidth = width / arOrder;
+        for (let i = 0; i < arOrder; i++) {
+          const x = margin + i * barWidth;
+          const barHeight = kernel[i] * scale;
+          const y = zeroY - barHeight;
+
+          // Color based on value
+          const hue = kernel[i] > 0 ? 120 : 0;
+          const saturation = 70;
+          const lightness = 50 + (Math.abs(kernel[i]) / maxAbs) * 30;
+          kernelCtx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+
+          kernelCtx.fillRect(
+            x + 2,
+            Math.min(y, zeroY),
+            barWidth - 4,
+            Math.abs(barHeight)
+          );
+
+          // Value label
+          kernelCtx.fillStyle = "white";
+          kernelCtx.font = "10px Arial";
+          kernelCtx.textAlign = "center";
+          kernelCtx.fillText(
+            `${i + 1}`,
+            x + barWidth / 2,
+            margin + height + 15
+          );
+
+          // Coefficient value
+          kernelCtx.fillText(
+            `${kernel[i].toFixed(2)}`,
+            x + barWidth / 2,
+            y < zeroY ? y - 5 : y + 15
+          );
+        }
+
+        // Labels
+        kernelCtx.fillStyle = "white";
+        kernelCtx.font = "12px Arial";
+        kernelCtx.textAlign = "center";
+        kernelCtx.fillText(
+          "Lag Index →",
+          kernelCanvas.width / 2,
+          kernelCanvas.height - 5
+        );
+      }
+
+      function drawResponses() {
+        responseCtx.clearRect(
+          0,
+          0,
+          responseCanvas.width,
+          responseCanvas.height
+        );
+
+        if (kernel.length === 0) return;
+
+        const margin = 40;
+        const totalWidth = responseCanvas.width - 2 * margin;
+        const height = responseCanvas.height - 2 * margin;
+
+        // Split canvas in half
+        const impulseWidth = totalWidth / 2 - 10;
+        const freqWidth = totalWidth / 2 - 10;
+
+        // Draw impulse response (left half)
+        drawImpulseResponse(margin, margin, impulseWidth, height);
+
+        // Draw frequency response (right half)
+        drawFrequencyResponse(
+          margin + totalWidth / 2 + 10,
+          margin,
+          freqWidth,
+          height
+        );
+      }
+
+      function drawImpulseResponse(startX, startY, width, height) {
+        const steps = 50;
+        let response = [1];
+
+        // Compute impulse response
+        for (let t = 1; t < steps; t++) {
+          let val = 0;
+          for (let j = 0; j < Math.min(t, arOrder); j++) {
+            val += kernel[j] * (response[t - 1 - j] || 0);
+          }
+          response.push(val);
+        }
+
+        const maxAbs = Math.max(...response.map(Math.abs), 0.1);
+        const scale = height / (2 * maxAbs);
+        const zeroY = startY + height / 2;
+
+        // Zero line
+        responseCtx.strokeStyle = "rgba(255,255,255,0.3)";
+        responseCtx.lineWidth = 1;
+        responseCtx.beginPath();
+        responseCtx.moveTo(startX, zeroY);
+        responseCtx.lineTo(startX + width, zeroY);
+        responseCtx.stroke();
+
+        // Impulse response curve
+        responseCtx.strokeStyle = "#FF6B6B";
+        responseCtx.lineWidth = 2;
+        responseCtx.beginPath();
+
+        for (let t = 0; t < response.length; t++) {
+          const x = startX + (t / (steps - 1)) * width;
+          const y = zeroY - response[t] * scale;
+
+          if (t === 0) responseCtx.moveTo(x, y);
+          else responseCtx.lineTo(x, y);
+
+          // Points
+          responseCtx.fillStyle = t === 0 ? "#FFD93D" : "#FF6B6B";
+          responseCtx.beginPath();
+          responseCtx.arc(x, y, t === 0 ? 4 : 2, 0, 2 * Math.PI);
+          responseCtx.fill();
+        }
+        responseCtx.stroke();
+
+        // Label
+        responseCtx.fillStyle = "white";
+        responseCtx.font = "14px Arial";
+        responseCtx.textAlign = "center";
+        responseCtx.fillText(
+          "Impulse Response",
+          startX + width / 2,
+          startY - 10
+        );
+      }
+
+      function drawFrequencyResponse(startX, startY, width, height) {
+        const freqPoints = 100;
+        const frequencies = [];
+        const magnitudes = [];
+
+        // Compute frequency response
+        for (let i = 0; i < freqPoints; i++) {
+          const omega = (i / (freqPoints - 1)) * Math.PI;
+          frequencies.push(omega);
+
+          // H(e^jω) = 1 / (1 - Σ φₖ e^(-jkω))
+          let realPart = 1;
+          let imagPart = 0;
+
+          for (let k = 0; k < arOrder; k++) {
+            realPart -= kernel[k] * Math.cos((k + 1) * omega);
+            imagPart += kernel[k] * Math.sin((k + 1) * omega);
+          }
+
+          const magnitude =
+            1 / Math.sqrt(realPart * realPart + imagPart * imagPart);
+          magnitudes.push(magnitude);
+        }
+
+        const maxMag = Math.max(...magnitudes);
+        const scale = height / maxMag;
+
+        // Frequency response curve
+        responseCtx.strokeStyle = "#4ECDC4";
+        responseCtx.lineWidth = 2;
+        responseCtx.beginPath();
+
+        for (let i = 0; i < frequencies.length; i++) {
+          const x = startX + (i / (freqPoints - 1)) * width;
+          const y = startY + height - magnitudes[i] * scale;
+
+          if (i === 0) responseCtx.moveTo(x, y);
+          else responseCtx.lineTo(x, y);
+        }
+        responseCtx.stroke();
+
+        // Frequency axis
+        responseCtx.strokeStyle = "rgba(255,255,255,0.3)";
+        responseCtx.lineWidth = 1;
+        responseCtx.beginPath();
+        responseCtx.moveTo(startX, startY + height);
+        responseCtx.lineTo(startX + width, startY + height);
+        responseCtx.stroke();
+
+        // Label
+        responseCtx.fillStyle = "white";
+        responseCtx.font = "14px Arial";
+        responseCtx.textAlign = "center";
+        responseCtx.fillText(
+          "Frequency Response",
+          startX + width / 2,
+          startY - 10
+        );
+        responseCtx.font = "10px Arial";
+        responseCtx.fillText("0", startX, startY + height + 15);
+        responseCtx.fillText("π", startX + width, startY + height + 15);
+      }
+
+      function updateSliders() {
+        document.getElementById("trendStrength").value = trendStrength;
+        document.getElementById("trendValue").textContent =
+          trendStrength.toFixed(1);
+
+        document.getElementById("lowFreq").value = lowFreq;
+        document.getElementById("lowFreqValue").textContent =
+          lowFreq.toFixed(3);
+
+        document.getElementById("midFreq").value = midFreq;
+        document.getElementById("midFreqValue").textContent =
+          midFreq.toFixed(3);
+
+        document.getElementById("highFreq").value = highFreq;
+        document.getElementById("highFreqValue").textContent =
+          highFreq.toFixed(3);
+
+        document.getElementById("logComponent").value = logComponent;
+        document.getElementById("logValue").textContent =
+          logComponent.toFixed(1);
+
+        document.getElementById("noiseLevel").value = noiseLevel;
+        document.getElementById("noiseValue").textContent =
+          noiseLevel.toFixed(2);
+      }
+
+      // Event listeners
+      document.getElementById("arOrder").addEventListener("input", (e) => {
+        arOrder = parseInt(e.target.value);
+        document.getElementById("arOrderValue").textContent = arOrder;
+      });
+
+      document.getElementById("signalLength").addEventListener("input", (e) => {
+        signalLength = parseInt(e.target.value);
+        document.getElementById("lengthValue").textContent = signalLength;
+        generateSignal();
+      });
+
+      document.getElementById("noiseLevel").addEventListener("input", (e) => {
+        noiseLevel = parseFloat(e.target.value);
+        document.getElementById("noiseValue").textContent =
+          noiseLevel.toFixed(2);
+        generateSignal();
+      });
+
+      document
+        .getElementById("trendStrength")
+        .addEventListener("input", (e) => {
+          trendStrength = parseFloat(e.target.value);
+          document.getElementById("trendValue").textContent =
+            trendStrength.toFixed(1);
+          generateSignal();
+        });
+
+      document.getElementById("lowFreq").addEventListener("input", (e) => {
+        lowFreq = parseFloat(e.target.value);
+        document.getElementById("lowFreqValue").textContent =
+          lowFreq.toFixed(3);
+        generateSignal();
+      });
+
+      document.getElementById("midFreq").addEventListener("input", (e) => {
+        midFreq = parseFloat(e.target.value);
+        document.getElementById("midFreqValue").textContent =
+          midFreq.toFixed(3);
+        generateSignal();
+      });
+
+      document.getElementById("highFreq").addEventListener("input", (e) => {
+        highFreq = parseFloat(e.target.value);
+        document.getElementById("highFreqValue").textContent =
+          highFreq.toFixed(3);
+        generateSignal();
+      });
+
+      document.getElementById("logComponent").addEventListener("input", (e) => {
+        logComponent = parseFloat(e.target.value);
+        document.getElementById("logValue").textContent =
+          logComponent.toFixed(1);
+        generateSignal();
+      });
+
+      // Initialize
+      generateSignal();
+
+      function drawPredictions() {
+        predictionCtx.clearRect(
+          0,
+          0,
+          predictionCanvas.width,
+          predictionCanvas.height
+        );
+
+        if (predictions.length === 0) return;
+
+        const margin = 40;
+        const width = predictionCanvas.width - 2 * margin;
+        const height = predictionCanvas.height - 2 * margin;
+
+        // Find range for both signal and predictions
+        const validPredictions = predictions.filter((p) => p !== 0);
+        if (validPredictions.length === 0) return;
+
+        const allValues = [...signal, ...validPredictions];
+        const minVal = Math.min(...allValues);
+        const maxVal = Math.max(...allValues);
+        const range = maxVal - minVal || 1;
+
+        // Helper functions
+        const toX = (i) => margin + (i / (signal.length - 1)) * width;
+        const toY = (val) =>
+          margin + height - ((val - minVal) / range) * height;
+
+        // Draw grid
+        predictionCtx.strokeStyle = "rgba(255,255,255,0.2)";
+        predictionCtx.lineWidth = 1;
+        for (let i = 0; i <= 5; i++) {
+          const y = margin + (i / 5) * height;
+          predictionCtx.beginPath();
+          predictionCtx.moveTo(margin, y);
+          predictionCtx.lineTo(margin + width, y);
+          predictionCtx.stroke();
+        }
+
+        // Draw actual signal
+        predictionCtx.strokeStyle = "#4ECDC4";
+        predictionCtx.lineWidth = 2;
+        predictionCtx.beginPath();
+        predictionCtx.moveTo(toX(0), toY(signal[0]));
+        for (let i = 1; i < signal.length; i++) {
+          predictionCtx.lineTo(toX(i), toY(signal[i]));
+        }
+        predictionCtx.stroke();
+
+        // Draw predictions (only where they exist)
+        predictionCtx.strokeStyle = "#FF6B6B";
+        predictionCtx.lineWidth = 2;
+        predictionCtx.setLineDash([5, 5]);
+        predictionCtx.beginPath();
+
+        let firstPred = true;
+        for (let i = arOrder; i < predictions.length; i++) {
+          if (predictions[i] !== 0) {
+            const x = toX(i);
+            const y = toY(predictions[i]);
+            if (firstPred) {
+              predictionCtx.moveTo(x, y);
+              firstPred = false;
+            } else {
+              predictionCtx.lineTo(x, y);
+            }
+          }
+        }
+        predictionCtx.stroke();
+        predictionCtx.setLineDash([]);
+
+        // Draw training region indicator
+        const trainStartX = toX(arOrder);
+        predictionCtx.strokeStyle = "rgba(255,255,255,0.4)";
+        predictionCtx.lineWidth = 1;
+        predictionCtx.setLineDash([2, 2]);
+        predictionCtx.beginPath();
+        predictionCtx.moveTo(trainStartX, margin);
+        predictionCtx.lineTo(trainStartX, margin + height);
+        predictionCtx.stroke();
+        predictionCtx.setLineDash([]);
+
+        // Labels
+        predictionCtx.fillStyle = "#4ECDC4";
+        predictionCtx.font = "12px Arial";
+        predictionCtx.textAlign = "left";
+        predictionCtx.fillText("Actual Signal", margin + 10, margin + 15);
+        predictionCtx.fillStyle = "#FF6B6B";
+        predictionCtx.fillText("AR Predictions", margin + 10, margin + 30);
+        predictionCtx.fillStyle = "rgba(255,255,255,0.7)";
+        predictionCtx.fillText(
+          "Training Region →",
+          trainStartX + 5,
+          margin + 15
+        );
+      }
+
+      function drawErrors() {
+        errorCtx.clearRect(0, 0, errorCanvas.width, errorCanvas.height);
+
+        if (errors.length === 0) return;
+
+        const margin = 40;
+        const width = errorCanvas.width - 2 * margin;
+        const height = errorCanvas.height - 2 * margin;
+
+        // Get valid errors (non-zero)
+        const validErrors = errors.slice(arOrder);
+        if (validErrors.length === 0) return;
+
+        const maxError = Math.max(...validErrors.map(Math.abs));
+        const scale = height / (2 * (maxError || 1));
+        const zeroY = margin + height / 2;
+
+        // Draw zero line
+        errorCtx.strokeStyle = "rgba(255,255,255,0.3)";
+        errorCtx.lineWidth = 1;
+        errorCtx.beginPath();
+        errorCtx.moveTo(margin, zeroY);
+        errorCtx.lineTo(margin + width, zeroY);
+        errorCtx.stroke();
+
+        // Draw error bars
+        const barWidth = width / validErrors.length;
+        for (let i = 0; i < validErrors.length; i++) {
+          const x = margin + i * barWidth;
+          const error = validErrors[i];
+          const barHeight = error * scale;
+          const y = zeroY - barHeight;
+
+          // Color based on error magnitude
+          const intensity = Math.abs(error) / maxError;
+          const hue = error > 0 ? 0 : 240; // Red for positive, blue for negative
+          const saturation = 70;
+          const lightness = 50 + intensity * 30;
+          errorCtx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+
+          errorCtx.fillRect(
+            x,
+            Math.min(y, zeroY),
+            Math.max(barWidth * 0.8, 1),
+            Math.abs(barHeight)
+          );
+        }
+
+        // Draw error line
+        errorCtx.strokeStyle = "#FFD93D";
+        errorCtx.lineWidth = 2;
+        errorCtx.beginPath();
+        for (let i = 0; i < validErrors.length; i++) {
+          const x = margin + i * barWidth + barWidth / 2;
+          const y = zeroY - validErrors[i] * scale;
+          if (i === 0) errorCtx.moveTo(x, y);
+          else errorCtx.lineTo(x, y);
+        }
+        errorCtx.stroke();
+
+        // Calculate and display error statistics
+        const meanError =
+          validErrors.reduce((a, b) => a + b, 0) / validErrors.length;
+        const stdError = Math.sqrt(
+          validErrors.reduce((sum, e) => sum + (e - meanError) ** 2, 0) /
+            validErrors.length
+        );
+        const maxAbsError = Math.max(...validErrors.map(Math.abs));
+
+        // Labels and stats
+        errorCtx.fillStyle = "white";
+        errorCtx.font = "12px Arial";
+        errorCtx.textAlign = "left";
+        errorCtx.fillText(
+          "Prediction Errors (Residuals)",
+          margin + 10,
+          margin + 15
+        );
+        errorCtx.font = "10px Arial";
+        errorCtx.fillText(
+          `Mean: ${meanError.toFixed(3)}`,
+          margin + 10,
+          margin + height - 30
+        );
+        errorCtx.fillText(
+          `Std: ${stdError.toFixed(3)}`,
+          margin + 100,
+          margin + height - 30
+        );
+        errorCtx.fillText(
+          `Max: ${maxAbsError.toFixed(3)}`,
+          margin + 180,
+          margin + height - 30
+        );
+
+        // Check for patterns in residuals
+        let autocorr = 0;
+        for (let i = 1; i < validErrors.length; i++) {
+          autocorr += validErrors[i] * validErrors[i - 1];
+        }
+        autocorr /= validErrors.length - 1;
+
+        errorCtx.fillText(
+          `AutoCorr: ${autocorr.toFixed(3)}`,
+          margin + 260,
+          margin + height - 30
+        );
+        if (Math.abs(autocorr) > 0.1) {
+          errorCtx.fillStyle = "#FF6B6B";
+          errorCtx.fillText(
+            "(Residuals show pattern!)",
+            margin + 350,
+            margin + height - 30
+          );
+        }
+      }
+    </script>
+  </body>
+</html>
