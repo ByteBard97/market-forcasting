@@ -9,7 +9,7 @@ This tool aims to provide non-technical business users with an intuitive interfa
 - Run multiple forecasting models in parallel
 - Compare model performance and accuracy
 - Adjust scenario parameters (promotions, pricing, foot traffic)
-- Export forecasts and visualizations
+- Export forecasts and visualizationsplease
 
 ## Implementation Approaches
 
