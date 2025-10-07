@@ -1,4 +1,18 @@
 import { defineAppSetup } from "@slidev/types";
+
+// Import slide components from slides/ folder
+import TitleSlide from "../slides/TitleSlide.vue";
+import SyntheticDataSlide from "../slides/SyntheticDataSlide.vue";
+import BaselineSlide from "../slides/BaselineSlide.vue";
+import WeeklySeasonalitySlide from "../slides/WeeklySeasonalitySlide.vue";
+import TimelineSlide from "../slides/TimelineSlide.vue";
+import ComponentsStackSlide from "../slides/ComponentsStackSlide.vue";
+import ModelComparisonSlide from "../slides/ModelComparisonSlide.vue";
+import FinalResultsSlide from "../slides/FinalResultsSlide.vue";
+
+// Import component library from components/ folder
+import SlideLayout from "../components/SlideLayout.vue";
+import TwoColumnSlide from "../components/TwoColumnSlide.vue";
 import DataSphereBackground from "../components/DataSphereBackground.vue";
 import MorphingDotsBackground from "../components/MorphingDotsBackground.vue";
 import PerlinNoiseBackground from "../components/PerlinNoiseBackground.vue";
@@ -16,7 +30,21 @@ import ModelBars from "../components/ModelBars.vue";
 import ModelPredictions from "../components/ModelPredictions.vue";
 
 export default defineAppSetup(({ app }) => {
-  // Register chart components with the main Slidev app
+  // Register slide components from slides/ folder
+  app.component("TitleSlide", TitleSlide);
+  app.component("SyntheticDataSlide", SyntheticDataSlide);
+  app.component("BaselineSlide", BaselineSlide);
+  app.component("WeeklySeasonalitySlide", WeeklySeasonalitySlide);
+  app.component("TimelineSlide", TimelineSlide);
+  app.component("ComponentsStackSlide", ComponentsStackSlide);
+  app.component("ModelComparisonSlide", ModelComparisonSlide);
+  app.component("FinalResultsSlide", FinalResultsSlide);
+
+  // Register supporting components from components/ folder
+  app.component("SlideLayout", SlideLayout);
+  app.component("TwoColumnSlide", TwoColumnSlide);
+
+  // Register chart components
   app.component("DemandOverviewChart", DemandOverviewChart);
   app.component("ComponentsChart", ComponentsChart);
   app.component("ModelComparisonChart", ModelComparisonChart);
@@ -26,7 +54,7 @@ export default defineAppSetup(({ app }) => {
   app.component("ModelBars", ModelBars);
   app.component("ModelPredictions", ModelPredictions);
 
-  // Register background components for use in slides
+  // Register background components
   app.component("DataSphereBackground", DataSphereBackground);
   app.component("MorphingDotsBackground", MorphingDotsBackground);
   app.component("PerlinNoiseBackground", PerlinNoiseBackground);

@@ -1,9 +1,12 @@
 <template>
   <SlideLayout background="sphere">
     <h1>How the Pieces Combine</h1>
-    <p class="subtitle"><strong>13 multiplicative components</strong> create realistic demand patterns</p>
+    <p class="subtitle">
+      <strong>13 multiplicative components</strong> create realistic demand
+      patterns
+    </p>
 
-    <div style="height: 450px; width: 100%;">
+    <div style="height: 450px; width: 100%">
       <ComponentsStack />
     </div>
 
@@ -14,8 +17,8 @@
 </template>
 
 <script setup>
-import SlideLayout from '../SlideLayout.vue'
-import ComponentsStack from '../ComponentsStack.vue'
+import SlideLayout from "../components/SlideLayout.vue";
+import ComponentsStack from "../components/ComponentsStack.vue";
 </script>
 
 <style scoped>

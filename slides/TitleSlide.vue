@@ -2,10 +2,17 @@
   <SlideLayout background="sphere" no-padding>
     <div class="title-card">
       <h1 class="main-title">Demand Forecasting with Causal Structure</h1>
-      <p class="subtitle">Building realistic synthetic data for time series prediction</p>
+      <p class="subtitle">
+        Building realistic synthetic data for time series prediction
+      </p>
       <div class="pt-6">
-        <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10" style="color: white;">
-          Press Space for next page <carbon:arrow-right class="inline"/>
+        <span
+          @click="$slidev.nav.next"
+          class="px-2 py-1 rounded cursor-pointer"
+          hover="bg-white bg-opacity-10"
+          style="color: white"
+        >
+          Press Space for next page <carbon:arrow-right class="inline" />
         </span>
       </div>
     </div>
@@ -13,11 +20,11 @@
 </template>
 
 <script setup>
-import SlideLayout from '../SlideLayout.vue'
+import SlideLayout from "../components/SlideLayout.vue";
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
 
 .title-card {
   position: absolute;
@@ -40,14 +47,20 @@ import SlideLayout from '../SlideLayout.vue'
 }
 
 .main-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   font-size: 1.875rem !important;
   margin-bottom: 1rem;
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.15 !important;
   max-width: 100%;
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     #ffffff 0%,
     #ffc9e0 20%,
     #ff85c0 40%,
@@ -63,7 +76,8 @@ import SlideLayout from '../SlideLayout.vue'
 }
 
 @keyframes shimmer {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {
@@ -72,7 +86,12 @@ import SlideLayout from '../SlideLayout.vue'
 }
 
 .subtitle {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   font-size: 0.85rem;
   opacity: 0.85;
   margin-bottom: 1.5rem;

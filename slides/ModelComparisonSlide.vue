@@ -1,9 +1,11 @@
 <template>
   <SlideLayout background="dots">
     <h1>Model Comparison</h1>
-    <p class="subtitle"><strong>Which model handles this complexity best?</strong></p>
+    <p class="subtitle">
+      <strong>Which model handles this complexity best?</strong>
+    </p>
 
-    <div style="height: 450px; width: 100%;">
+    <div style="height: 450px; width: 100%">
       <ModelBars />
     </div>
 
@@ -14,8 +16,8 @@
 </template>
 
 <script setup>
-import SlideLayout from '../SlideLayout.vue'
-import ModelBars from '../ModelBars.vue'
+import SlideLayout from "../components/SlideLayout.vue";
+import ModelBars from "../components/ModelBars.vue";
 </script>
 
 <style scoped>

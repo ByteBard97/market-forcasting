@@ -43,8 +43,10 @@ mdc: true
 <FinalResultsSlide />
 
 ---
+
 layout: center
 class: text-center
+
 ---
 
 <SlideLayout background="dots">

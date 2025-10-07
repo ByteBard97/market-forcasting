@@ -1,7 +1,10 @@
 <template>
   <SlideLayout background="sphere">
     <h1>Final Results: Best of Both Worlds</h1>
-    <p class="subtitle"><strong>With realistic validation</strong> (7-day horizon, actual lags, exogenous regressors)</p>
+    <p class="subtitle">
+      <strong>With realistic validation</strong> (7-day horizon, actual lags,
+      exogenous regressors)
+    </p>
 
     <div class="mt-4">
       <table class="text-sm w-full">
@@ -78,17 +81,19 @@
 
     <div class="mt-4 grid grid-cols-2 gap-4 text-xs">
       <div class="p-2 bg-blue-900 bg-opacity-20 rounded">
-        <strong>MAE = 23.34 means:</strong> Off by ~23 pairs/day on average (for 50-80 pairs/day typical sales = 29-46% error)
+        <strong>MAE = 23.34 means:</strong> Off by ~23 pairs/day on average (for
+        50-80 pairs/day typical sales = 29-46% error)
       </div>
       <div class="p-2 bg-green-900 bg-opacity-20 rounded">
-        <strong>Coverage = 84% means:</strong> Confidence intervals capture 84% of actuals (target: 95%, but 84% is realistic)
+        <strong>Coverage = 84% means:</strong> Confidence intervals capture 84%
+        of actuals (target: 95%, but 84% is realistic)
       </div>
     </div>
   </SlideLayout>
 </template>
 
 <script setup>
-import SlideLayout from '../SlideLayout.vue'
+import SlideLayout from "../components/SlideLayout.vue";
 </script>
 
 <style scoped>

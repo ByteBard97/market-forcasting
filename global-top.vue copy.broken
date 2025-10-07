@@ -1,0 +1,31 @@
+<template>
+  <!-- Background is teleported outside the scaled container -->
+  <Teleport to="body">
+    <div
+      ref="backgroundWrapper"
+      class="fixed top-0 left-0 w-full h-full pointer-events-none"
+      :style="{
+        transform: inverseTransform,
+        transformOrigin: 'top left',
+        zIndex: -1,
+      }"
+    >
+      <GlobalBackgroundManager />
+    </div>
+  </Teleport>
+
+  <!-- Selector stays in the normal flow -->
+  <BackgroundSelector />
+</template>
+
+<script setup>
+import { ref } from "vue";
+import GlobalBackgroundManager from "./components/GlobalBackgroundManager.vue";
+import BackgroundSelector from "./components/BackgroundSelector.vue";
+import { useInverseSlidevTransform } from "./composables/useInverseSlidevTransform";
+
+const backgroundWrapper = ref(null);
+
+// Get the inverse transform that will counteract Slidev's scaling
+const { inverseTransform } = useInverseSlidevTransform();
+</script>
