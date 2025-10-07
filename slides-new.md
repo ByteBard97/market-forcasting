@@ -28,6 +28,22 @@ mdc: true
 
 ---
 
+<YearlySeasonalitySlide />
+
+---
+
+<ImpulseResponseSlide />
+
+---
+
+<MarketingEffectSlide />
+
+---
+
+<SeasonalPatternsSlide />
+
+---
+
 <TimelineSlide />
 
 ---
@@ -36,7 +52,27 @@ mdc: true
 
 ---
 
+<PredictionsSlide />
+
+---
+
 <ModelComparisonSlide />
+
+---
+
+<FirstResultsSlide />
+
+---
+
+<DataLeakageSlide />
+
+---
+
+<AfterFixingSlide />
+
+---
+
+<RealisticScenarioSlide />
 
 ---
 
@@ -44,6 +80,21 @@ mdc: true
 
 ---
 
+<EnhancedRealismSlide />
+
+---
+
+<ProphetForecastSlide />
+
+---
+
+<InventoryRealitySlide />
+
+---
+
+<WhatWeLearnedSlide />
+
+---
 layout: center
 class: text-center
 
