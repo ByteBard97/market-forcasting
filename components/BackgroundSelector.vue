@@ -1,5 +1,10 @@
 <template>
-  <div class="background-selector">
+  <div
+    class="background-selector"
+    :class="{ visible: isVisible }"
+    @mouseenter="handleMenuEnter"
+    @mouseleave="handleMenuLeave"
+  >
     <button
       v-for="bg in backgrounds"
       :key="bg.type"
@@ -14,10 +19,63 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useBackgroundStore } from '../composables/useBackgroundStore'
 
 const { currentBackground, setBackground } = useBackgroundStore()
+const isVisible = ref(false)
+let hideTimeout = null
+let showTimeout = null
+let wasInSouthArea = false
+
+function handleMouseMove(e) {
+  const threshold = window.innerHeight - 100
+  const inSouthArea = e.clientY > threshold
+
+  if (inSouthArea && !wasInSouthArea) {
+    // Just entered south area
+    wasInSouthArea = true
+    if (hideTimeout) clearTimeout(hideTimeout)
+
+    // Show after 500ms
+    showTimeout = setTimeout(() => {
+      isVisible.value = true
+    }, 500)
+  } else if (!inSouthArea && wasInSouthArea) {
+    // Just left south area
+    wasInSouthArea = false
+    if (showTimeout) clearTimeout(showTimeout)
+
+    // Hide after 1 second
+    hideTimeout = setTimeout(() => {
+      isVisible.value = false
+    }, 1000)
+  }
+}
+
+function handleMenuEnter() {
+  wasInSouthArea = true
+  if (hideTimeout) clearTimeout(hideTimeout)
+  if (showTimeout) clearTimeout(showTimeout)
+  isVisible.value = true
+}
+
+function handleMenuLeave() {
+  wasInSouthArea = false
+  hideTimeout = setTimeout(() => {
+    isVisible.value = false
+  }, 1000)
+}
+
+onMounted(() => {
+  window.addEventListener('mousemove', handleMouseMove)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('mousemove', handleMouseMove)
+  if (hideTimeout) clearTimeout(hideTimeout)
+  if (showTimeout) clearTimeout(showTimeout)
+})
 
 const backgrounds = [
   { type: 'datasphere', label: 'Data Sphere', description: 'Connected dots' },
@@ -37,46 +95,52 @@ function selectBackground(type) {
 <style scoped>
 .background-selector {
   position: fixed;
-  bottom: 20px;
+  bottom: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(100%);
   z-index: 1000;
   display: flex;
-  gap: 6px;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.7);
+  gap: 4px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(10px);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px 8px 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: none;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.background-selector.visible {
+  transform: translateX(-50%) translateY(0);
 }
 
 .bg-btn {
-  padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
   color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 11px;
+  transition: all 0.2s ease;
+  font-size: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
 }
 
 .bg-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
 }
 
 .bg-btn.active {
-  background: rgba(100, 150, 255, 0.5);
-  border-color: rgba(100, 150, 255, 0.8);
+  background: rgba(100, 150, 255, 0.4);
+  border-color: rgba(100, 150, 255, 0.6);
 }
 
 .bg-desc {
-  font-size: 8px;
-  opacity: 0.7;
+  font-size: 7px;
+  opacity: 0.6;
 }
 </style>

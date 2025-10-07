@@ -14,6 +14,8 @@ let raycaster, dotsGeometry, segmentsGeom
 let attributePositions, attributeSizes
 let animationId
 let mouseMoveHandler, resizeHandler
+let rotationSpeedY = 0.001
+let rotationSpeedX = 0.0004
 
 const colors = [
   new THREE.Color(0xac1122),
@@ -98,6 +100,15 @@ onMounted(async () => {
     vector.multiplyScalar(120 + (Math.random() - 0.5) * 5)
     vector.scaleX = 5
 
+    // Store original normalized position for pulsation
+    vector.nx = vector.x
+    vector.ny = vector.y
+    vector.nz = vector.z
+    const length = Math.sqrt(vector.nx * vector.nx + vector.ny * vector.ny + vector.nz * vector.nz)
+    vector.nx /= length
+    vector.ny /= length
+    vector.nz /= length
+
     if (Math.random() > 0.5) {
       moveDot(vector, i, positions)
     }
@@ -170,6 +181,7 @@ onMounted(async () => {
   segmentsGeom = new THREE.BufferGeometry()
   const segmentPositions = []
   const segmentColors = []
+  const segmentIndices = [] // Store pairs of vertex indices
 
   for (let i = vertices.length - 1; i >= 0; i--) {
     const vector = vertices[i]
@@ -180,12 +192,15 @@ onMounted(async () => {
         const col = colors[vector.color]
         segmentColors.push(col.r, col.g, col.b)
         segmentColors.push(col.r, col.g, col.b)
+        // Store which vertices this segment connects
+        segmentIndices.push([i, j])
       }
     }
   }
 
   segmentsGeom.setAttribute('position', new THREE.Float32BufferAttribute(segmentPositions, 3))
   segmentsGeom.setAttribute('color', new THREE.Float32BufferAttribute(segmentColors, 3))
+  segmentsGeom.segmentIndices = segmentIndices
 
   const segmentsMat = new THREE.LineBasicMaterial({
     color: 0xffffff,
@@ -203,8 +218,44 @@ onMounted(async () => {
   // Animation loop
   let hovered = []
   let prevHovered = []
+  let pulseTime = 0
 
   function render() {
+    pulseTime += 0.02
+    const pulseScale = 1 + Math.sin(pulseTime) * 0.05
+
+    // Update vertex positions for pulsation
+    for (let i = 0; i < vertices.length; i++) {
+      const vertex = vertices[i]
+      const baseX = vertex.nx * 120
+      const baseY = vertex.ny * 120
+      const baseZ = vertex.nz * 120
+
+      vertex.x = baseX * pulseScale
+      vertex.y = baseY * pulseScale
+      vertex.z = baseZ * pulseScale
+
+      attributePositions.array[i * 3] = vertex.x
+      attributePositions.array[i * 3 + 1] = vertex.y
+      attributePositions.array[i * 3 + 2] = vertex.z
+    }
+
+    // Update segment positions to match pulsating dots
+    const segmentPositions = segmentsGeom.attributes.position
+    for (let i = 0; i < segmentsGeom.segmentIndices.length; i++) {
+      const [idx1, idx2] = segmentsGeom.segmentIndices[i]
+      const v1 = vertices[idx1]
+      const v2 = vertices[idx2]
+
+      segmentPositions.array[i * 6] = v1.x
+      segmentPositions.array[i * 6 + 1] = v1.y
+      segmentPositions.array[i * 6 + 2] = v1.z
+      segmentPositions.array[i * 6 + 3] = v2.x
+      segmentPositions.array[i * 6 + 4] = v2.y
+      segmentPositions.array[i * 6 + 5] = v2.z
+    }
+    segmentPositions.needsUpdate = true
+
     raycaster.setFromCamera(mouse, camera)
     const intersections = raycaster.intersectObjects([wrap])
     hovered = []
@@ -228,6 +279,17 @@ onMounted(async () => {
     prevHovered = hovered.slice(0)
     attributeSizes.needsUpdate = true
     attributePositions.needsUpdate = true
+
+    // Random walk for rotation speeds
+    rotationSpeedY += (Math.random() - 0.5) * 0.00005
+    rotationSpeedX += (Math.random() - 0.5) * 0.00002
+
+    // Clamp speeds to reasonable ranges
+    rotationSpeedY = Math.max(-0.003, Math.min(0.003, rotationSpeedY))
+    rotationSpeedX = Math.max(-0.002, Math.min(0.002, rotationSpeedX))
+
+    galaxy.rotation.y += rotationSpeedY
+    galaxy.rotation.x += rotationSpeedX
 
     renderer.render(scene, camera)
     animationId = requestAnimationFrame(render)

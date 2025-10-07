@@ -21,10 +21,10 @@ onMounted(async () => {
 
     // Sample every 7 days for performance
     const dates = data.calendar.ds.filter((_, i) => i % 7 === 0);
-    const weekly = data.components.weekly_seasonality.filter((_, i) => i % 7 === 0);
-    const yearly = data.components.yearly_seasonality.filter((_, i) => i % 7 === 0);
-    const holiday = data.components.holiday_effect.filter((_, i) => i % 7 === 0);
-    const drop = data.components.product_drop.filter((_, i) => i % 7 === 0);
+    const weekly = data.ground_truth.weekly.filter((_, i) => i % 7 === 0);
+    const yearly = data.ground_truth.yearly.filter((_, i) => i % 7 === 0);
+    const holiday = data.ground_truth.holiday.filter((_, i) => i % 7 === 0);
+    const promo = data.ground_truth.promo.filter((_, i) => i % 7 === 0);
 
     const ctx = chartCanvas.value.getContext('2d');
     chartInstance = new Chart(ctx, {
@@ -36,7 +36,7 @@ onMounted(async () => {
             label: 'Weekly Seasonality',
             data: weekly,
             borderColor: 'rgb(59, 130, 246)',
-            borderWidth: 1,
+            borderWidth: 2,
             pointRadius: 0,
             tension: 0.3,
           },
@@ -52,15 +52,15 @@ onMounted(async () => {
             label: 'Holiday Effect',
             data: holiday,
             borderColor: 'rgb(239, 68, 68)',
-            borderWidth: 1,
+            borderWidth: 2,
             pointRadius: 0,
             tension: 0,
           },
           {
-            label: 'Product Drops',
-            data: drop,
+            label: 'Promotions',
+            data: promo,
             borderColor: 'rgb(34, 197, 94)',
-            borderWidth: 1,
+            borderWidth: 2,
             pointRadius: 0,
             tension: 0,
           }

@@ -31,7 +31,10 @@
       "mcp__chrome-devtools__click",
       "WebFetch(domain:mamboleoo.github.io)",
       "WebFetch(domain:tympanus.net)",
-      "Bash(git clone:*)"
+      "Bash(git clone:*)",
+      "Read(///**)",
+      "WebFetch(domain:plotly.com)",
+      "Bash(/home/geoff/anaconda3/envs/market-forecasting/bin/pip install manim)"
     ],
     "deny": [],
     "ask": []

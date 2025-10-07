@@ -52,6 +52,18 @@
   width: 100%;
 }
 
+/* Graph container for constrained layout (fits in right half of slide) */
+.graph-container {
+  container-type: size;
+  width: 100%;
+  height: 100%;
+}
+
+.graph-container > div {
+  width: 100cqw;
+  height: 100cqh;
+}
+
 /* KPI tiles */
 .kpi {
   font-size: 3.2cqw;

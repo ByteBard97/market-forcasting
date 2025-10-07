@@ -86,27 +86,34 @@ class AirJordanDemandGenerator:
         self.combine_mode = "multiplicative"
         self.version = "1.0"
 
-    def _smooth_lead(self, signal: np.ndarray, lead_days: int) -> np.ndarray:
+    def _apply_impulse_response(
+        self,
+        signal: np.ndarray,
+        impulse_response: np.ndarray,
+        normalize: bool = True
+    ) -> np.ndarray:
         """
-        Create a leading version of a signal (shift forward in time).
+        Apply impulse response convolution to a signal.
+
+        This simulates how an input signal (e.g., marketing spend) affects
+        demand over time with a realistic temporal pattern (build-up, peak, decay).
 
         Args:
-            signal: Original signal
-            lead_days: Days to lead (positive = signal occurs earlier)
+            signal: Input signal (e.g., marketing spend)
+            impulse_response: Temporal response pattern (convolution kernel)
+            normalize: If True, normalize output to preserve mean ~1.0
 
         Returns:
-            Led signal (padded with 1.0 at end)
+            Convolved signal with temporal dynamics
         """
-        if self.freq == "W":
-            lead_periods = max(1, lead_days // 7)
-        else:
-            lead_periods = lead_days
+        # Convolve signal with impulse response
+        effect = np.convolve(signal, impulse_response, mode='same')
 
-        # Shift signal forward (it "leads" the outcome)
-        led = np.roll(signal, lead_periods)
-        # Fill the end with neutral multiplier
-        led[-lead_periods:] = 1.0
-        return led
+        # Normalize to keep mean similar to input (for multiplicative composition)
+        if normalize and signal.mean() > 0:
+            effect = effect / effect.mean() * signal.mean()
+
+        return effect
 
     def _generate_baseline(self) -> np.ndarray:
         """
@@ -243,7 +250,7 @@ class AirJordanDemandGenerator:
 
         return drop_mult, drop_flag
 
-    def _generate_promo(self, n_promos: int = 15) -> np.ndarray:
+    def _generate_promo(self, n_promos: int = 15) -> Dict[str, np.ndarray]:
         """
         Generate promotional campaigns (random timing, 1-3 week duration).
 
@@ -251,9 +258,9 @@ class AirJordanDemandGenerator:
             n_promos: Number of promotional campaigns
 
         Returns:
-            Promo multiplier ~1.0
+            Dict with raw promo flags and effect on demand (with impulse response)
         """
-        promo_mult = np.ones(self.n_periods)
+        promo_raw = np.ones(self.n_periods)
 
         for _ in range(n_promos):
             start_idx = np.random.randint(0, max(1, self.n_periods - 21))
@@ -261,9 +268,26 @@ class AirJordanDemandGenerator:
             boost = np.random.uniform(0.3, 0.7)  # 30-70% lift
 
             for i in range(start_idx, min(start_idx + duration, self.n_periods)):
-                promo_mult[i] *= (1 + boost)
+                promo_raw[i] *= (1 + boost)
 
-        return promo_mult
+        # Impulse response for promo effect
+        # Promos have immediate impact but also some trailing effect as word spreads
+        # Pattern: small anticipation → immediate peak → quick decay
+        if self.freq == "D":
+            promo_ir = np.array([
+                0.2, 0.4,           # 2-day anticipation (customers wait for promo)
+                1.0, 0.9, 0.8,      # 3-day peak (promo active)
+                0.5, 0.3, 0.1       # 3-day tail (late adopters)
+            ])
+        else:
+            promo_ir = np.array([0.5, 1.0, 0.7, 0.3])  # Weekly: 1 week lead, peak, 2 weeks trail
+
+        promo_effect = self._apply_impulse_response(promo_raw, promo_ir)
+
+        return {
+            "promo_raw": promo_raw,
+            "promo_effect": promo_effect,
+        }
 
     def _generate_price_series(self, promo_mult: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -300,7 +324,7 @@ class AirJordanDemandGenerator:
         Exhibits bursts around drops and holidays.
 
         Returns:
-            Dict with raw, lead7, lead14 versions
+            Dict with raw and effect versions (with impulse response)
         """
         # Base hype level with slow growth
         t = np.arange(self.n_periods)
@@ -324,10 +348,23 @@ class AirJordanDemandGenerator:
         # Normalize to multiplier ~1.0
         hype_raw = hype_raw / hype_raw.mean()
 
+        # Impulse response for hype effect on demand
+        # Hype builds awareness 7-14 days before peak impact, then decays quickly
+        # Pattern: slow build → peak → fast decay
+        if self.freq == "D":
+            hype_ir = np.array([
+                0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.7,  # 7-day build-up (leads demand)
+                1.0, 1.0, 0.9,                         # 3-day peak (concurrent)
+                0.6, 0.4, 0.2, 0.1                     # 4-day decay (trailing)
+            ])
+        else:
+            hype_ir = np.array([0.3, 0.6, 1.0, 0.7, 0.3])  # Weekly: 2 weeks lead, peak, 2 weeks trail
+
+        hype_effect = self._apply_impulse_response(hype_raw, hype_ir)
+
         return {
             "hype_raw": hype_raw,
-            "hype_lead7": self._smooth_lead(hype_raw, 7),
-            "hype_lead14": self._smooth_lead(hype_raw, 14),
+            "hype_effect": hype_effect,
         }
 
     def _generate_marketing_signal(self) -> Dict[str, np.ndarray]:
@@ -336,7 +373,7 @@ class AirJordanDemandGenerator:
         Concentrated around drops and holidays.
 
         Returns:
-            Dict with raw, lead7, lead14 versions
+            Dict with raw and effect versions (with impulse response)
         """
         # Base marketing with seasonal pattern
         t = np.arange(self.n_periods)
@@ -359,10 +396,23 @@ class AirJordanDemandGenerator:
         # Normalize
         marketing_raw = marketing_raw / marketing_raw.mean()
 
+        # Impulse response for marketing effect on demand
+        # Marketing campaigns need lead time: awareness → consideration → purchase
+        # Pattern: long build-up → peak near end of campaign → trailing effect
+        if self.freq == "D":
+            marketing_ir = np.array([
+                0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5,  # 7-day build-up (awareness)
+                0.7, 0.9, 1.0, 1.0, 0.9,               # 5-day peak (conversion)
+                0.7, 0.5, 0.3, 0.2, 0.1                # 5-day decay (trailing)
+            ])
+        else:
+            marketing_ir = np.array([0.2, 0.5, 0.8, 1.0, 0.6, 0.3])  # Weekly: 3 weeks total
+
+        marketing_effect = self._apply_impulse_response(marketing_raw, marketing_ir)
+
         return {
             "marketing_raw": marketing_raw,
-            "marketing_lead7": self._smooth_lead(marketing_raw, 7),
-            "marketing_lead14": self._smooth_lead(marketing_raw, 14),
+            "marketing_effect": marketing_effect,
         }
 
     def _generate_traffic_signal(self) -> np.ndarray:
@@ -615,11 +665,21 @@ class AirJordanDemandGenerator:
         yearly = self._generate_yearly_seasonality()
         holiday_mult, holiday_flag = self._generate_holiday_effects()
         drop_mult, drop_flag = self._generate_drop_events()
-        promo_mult = self._generate_promo()
-        price_series, price_mult = self._generate_price_series(promo_mult)
+
+        promo_signals = self._generate_promo()
+        promo_raw = promo_signals["promo_raw"]
+        promo_effect = promo_signals["promo_effect"]
+
+        price_series, price_mult = self._generate_price_series(promo_raw)
 
         hype_signals = self._generate_hype_signal()
+        hype_raw = hype_signals["hype_raw"]
+        hype_effect = hype_signals["hype_effect"]
+
         marketing_signals = self._generate_marketing_signal()
+        marketing_raw = marketing_signals["marketing_raw"]
+        marketing_effect = marketing_signals["marketing_effect"]
+
         traffic = self._generate_traffic_signal()
         noise = self._generate_noise()
 
@@ -632,22 +692,22 @@ class AirJordanDemandGenerator:
         region_mult = {"NA": 1.0, "EMEA": 0.75, "APAC": 0.85}[region]
         channel_mult = {"DTC": 0.6, "Retail": 0.4}[channel]
 
-        # 3. Compose latent demand (multiplicative)
+        # 3. Compose latent demand (multiplicative with causal impulse responses)
         latent_demand = (
             baseline *
             weekly *
             yearly *
             holiday_mult *
             drop_mult *
-            promo_mult *
-            price_mult *
-            hype_signals["hype_lead14"] *
-            marketing_signals["marketing_lead7"] *
-            traffic *
-            noise *
-            competitor_mult *  # NEW: competitor launches reduce demand
-            weather_mult *      # NEW: weather affects traffic
-            viral_mult *        # NEW: viral events spike demand
+            promo_effect *      # Uses impulse response (anticipation → peak → decay)
+            price_mult *        # Immediate price elasticity
+            hype_effect *       # Uses impulse response (7-day lead → peak → decay)
+            marketing_effect *  # Uses impulse response (build-up → peak → trail)
+            traffic *           # Contemporaneous
+            noise *             # Random residual
+            competitor_mult *   # Competitor launches reduce demand
+            weather_mult *      # Weather affects traffic
+            viral_mult *        # Viral events spike demand
             region_mult *
             channel_mult
         )
@@ -698,14 +758,13 @@ class AirJordanDemandGenerator:
                 "weekly": weekly.tolist(),
                 "yearly": yearly.tolist(),
                 "holiday": holiday_mult.tolist(),
-                "promo": promo_mult.tolist(),
+                "promo_raw": promo_raw.tolist(),
+                "promo_effect": promo_effect.tolist(),
                 "price_mult": price_mult.tolist(),
-                "hype_raw": hype_signals["hype_raw"].tolist(),
-                "hype_lead7": hype_signals["hype_lead7"].tolist(),
-                "hype_lead14": hype_signals["hype_lead14"].tolist(),
-                "marketing_raw": marketing_signals["marketing_raw"].tolist(),
-                "marketing_lead7": marketing_signals["marketing_lead7"].tolist(),
-                "marketing_lead14": marketing_signals["marketing_lead14"].tolist(),
+                "hype_raw": hype_raw.tolist(),
+                "hype_effect": hype_effect.tolist(),
+                "marketing_raw": marketing_raw.tolist(),
+                "marketing_effect": marketing_effect.tolist(),
                 "traffic": traffic.tolist(),
                 "noise": noise.tolist(),
                 "competitor": competitor_mult.tolist(),

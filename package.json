@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "slidev slides.md",
-    "build": "slidev build slides.md",
+    "build": "slidev build slides.md --base /market-forcasting/ --out docs",
     "export": "slidev export slides.md"
   },
   "repository": {
