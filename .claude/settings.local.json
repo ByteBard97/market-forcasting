@@ -55,7 +55,9 @@
       "Bash(npx:*)",
       "Bash(find:*)",
       "Bash(lsof:*)",
-      "mcp__chrome-devtools__wait_for"
+      "mcp__chrome-devtools__wait_for",
+      "Bash(curl:*)",
+      "Bash(npm ls:*)"
     ],
     "deny": [],
     "ask": []

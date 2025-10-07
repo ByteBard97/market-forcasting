@@ -18,6 +18,11 @@ import PerlinNoiseBackground from "./PerlinNoiseBackground.vue";
 import SurfaceLinesBackground from "./SurfaceLinesBackground.vue";
 import DistortedCubeBackground from "./DistortedCubeBackground.vue";
 import TentacleBackground from "./TentacleBackground.vue";
+import VantaWavesBackground from "./VantaWavesBackground.vue";
+import VantaBirdsBackground from "./VantaBirdsBackground.vue";
+import VantaNetBackground from "./VantaNetBackground.vue";
+import VantaCloudsBackground from "./VantaCloudsBackground.vue";
+import VantaFogBackground from "./VantaFogBackground.vue";
 
 const { currentBackground } = useSlideBackground();
 
@@ -35,6 +40,16 @@ const backgroundComponent = computed(() => {
       return DistortedCubeBackground;
     case "tentacle":
       return TentacleBackground;
+    case "vanta-waves":
+      return VantaWavesBackground;
+    case "vanta-birds":
+      return VantaBirdsBackground;
+    case "vanta-net":
+      return VantaNetBackground;
+    case "vanta-clouds":
+      return VantaCloudsBackground;
+    case "vanta-fog":
+      return VantaFogBackground;
     case "none":
       return null;
     default:

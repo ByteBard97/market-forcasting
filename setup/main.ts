@@ -22,6 +22,7 @@ import EnhancedRealismSlide from "../slides/EnhancedRealismSlide.vue";
 import ProphetForecastSlide from "../slides/ProphetForecastSlide.vue";
 import InventoryRealitySlide from "../slides/InventoryRealitySlide.vue";
 import WhatWeLearnedSlide from "../slides/WhatWeLearnedSlide.vue";
+import DiveDeeperSlide from "../slides/DiveDeeperSlide.vue";
 
 // Import component library from components/ folder
 import SlideLayout from "../components/SlideLayout.vue";
@@ -65,6 +66,7 @@ export default defineAppSetup(({ app }) => {
   app.component("ProphetForecastSlide", ProphetForecastSlide);
   app.component("InventoryRealitySlide", InventoryRealitySlide);
   app.component("WhatWeLearnedSlide", WhatWeLearnedSlide);
+  app.component("DiveDeeperSlide", DiveDeeperSlide);
 
   // Register supporting components from components/ folder
   app.component("SlideLayout", SlideLayout);

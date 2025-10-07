@@ -11,7 +11,7 @@ const props = defineProps({
   background: {
     type: String,
     default: 'sphere', // Note: background is now controlled by user via BackgroundSelector
-    validator: (value) => [null, 'sphere', 'dots'].includes(value)
+    validator: (value) => [null, 'sphere', 'dots', 'datasphere', 'morphing', 'perlin', 'surfacelines', 'distortedcube', 'tentacle', 'vanta-waves', 'vanta-birds', 'vanta-net', 'vanta-clouds', 'vanta-fog', 'none'].includes(value)
   },
   noPadding: {
     type: Boolean,

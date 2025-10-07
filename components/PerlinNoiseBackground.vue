@@ -41,22 +41,20 @@ onMounted(() => {
   light3.position.set(-200, 300, 400)
   scene.add(light3)
 
-  geometry = new THREE.IcosahedronGeometry(100, 64)  // More subdivisions for smoother blob
+  geometry = new THREE.IcosahedronGeometry(120, 4)  // Match original: lower subdivisions, larger size
 
-  // Store original positions
-  const positionAttribute = geometry.attributes.position
-  const originalPositions = new Float32Array(positionAttribute.array.length)
-  for (let i = 0; i < positionAttribute.array.length; i++) {
-    originalPositions[i] = positionAttribute.array[i]
+  // Store original positions using vertices array
+  const vertices = geometry.attributes.position.array
+  const originalPositions = new Float32Array(vertices.length)
+  for (let i = 0; i < vertices.length; i++) {
+    originalPositions[i] = vertices[i]
   }
   geometry.userData.originalPositions = originalPositions
 
   const material = new THREE.MeshPhongMaterial({
-    color: 0x23f660,
-    emissive: 0x0B4F30,
-    emissiveIntensity: 0.2,
-    shininess: 90,
-    specular: 0x33ff88
+    emissive: 0x23f660,  // Use emissive as main color
+    emissiveIntensity: 0.4,  // Higher intensity like original
+    shininess: 0  // No shininess like original
   })
 
   shape = new THREE.Mesh(geometry, material)
@@ -72,13 +70,13 @@ onMounted(() => {
       const z = originalPositions[i * 3 + 2]
 
       const perlin = noise(
-        (x * 0.004) + (a * 0.0003),
-        (y * 0.004) + (a * 0.0004),
-        (z * 0.004) + (a * 0.0002)
+        (x * 0.006) + (a * 0.0002),  // Match original parameters
+        (y * 0.006) + (a * 0.0003),
+        (z * 0.006)
       )
 
-      // More dramatic deformation
-      const ratio = ((perlin * 0.6 * (mouse.y + 0.3)) + 0.9)
+      // Match original deformation formula exactly
+      const ratio = ((perlin * 0.4 * (mouse.y + 0.1)) + 0.8)
 
       positionAttribute.array[i * 3] = x * ratio
       positionAttribute.array[i * 3 + 1] = y * ratio

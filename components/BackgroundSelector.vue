@@ -203,6 +203,11 @@ const backgrounds = [
     description: "Wireframe cube",
   },
   { type: "tentacle", label: "Tentacle", description: "Organic lines" },
+  { type: "vanta-waves", label: "Waves", description: "Ocean waves" },
+  { type: "vanta-birds", label: "Birds", description: "Flocking birds" },
+  { type: "vanta-net", label: "Net", description: "3D network" },
+  { type: "vanta-clouds", label: "Clouds", description: "Cloudy sky" },
+  { type: "vanta-fog", label: "Fog", description: "Misty fog" },
   { type: "none", label: "None", description: "No background" },
 ];
 

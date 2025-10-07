@@ -1,0 +1,185 @@
+/* Tympanus-Inspired Typography & Styling */
+/* Fonts: Barlow for body, Poppins for headings */
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Poppins:wght@600;700&display=swap');
+
+:root {
+  /* Colors inspired by Tympanus DecorativeBackgrounds */
+  --color-text: #fff;
+  --color-text-secondary: #e0e0e0;
+  --color-bg: #0a0a0a;
+  --color-accent: #523bdc;
+  --color-accent-hover: #7c6bef;
+  --color-glow: #A9E7DA;
+
+  /* Typography */
+  --font-body: 'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+  /* Font smoothing for crisp text */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Apply Barlow to body text */
+body,
+.slidev-layout {
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Apply Poppins to all headings */
+h1, h2, h3, h4, h5, h6,
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3,
+.slidev-layout h4 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+/* Large hero headings like Tympanus */
+h1,
+.slidev-layout h1 {
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 600;
+  margin-bottom: 0.5em;
+}
+
+h2,
+.slidev-layout h2 {
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  font-weight: 600;
+}
+
+h3,
+.slidev-layout h3 {
+  font-size: clamp(1.3rem, 3.5vw, 2rem);
+  font-weight: 600;
+}
+
+/* Subtle text glow effect on headings (optional) */
+h1, h2 {
+  text-shadow: 0 0 20px rgba(169, 231, 218, 0.3);
+}
+
+/* Clean paragraph styling */
+p {
+  line-height: 1.6;
+  margin-bottom: 1em;
+  color: var(--color-text-secondary);
+}
+
+/* Links with Tympanus accent color */
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover,
+a:focus {
+  color: var(--color-accent-hover);
+}
+
+/* Code blocks */
+code,
+pre {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Dank Mono', monospace;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Lists with better spacing */
+ul, ol {
+  line-height: 1.8;
+  padding-left: 1.5em;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5em 0;
+}
+
+th, td {
+  padding: 0.75em 1em;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+th {
+  font-weight: 600;
+  color: var(--color-text);
+  background: rgba(82, 59, 220, 0.1);
+}
+
+/* Buttons/Interactive elements */
+button,
+.btn {
+  font-family: var(--font-body);
+  font-weight: 500;
+  padding: 0.75em 1.5em;
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.02em;
+}
+
+button:hover,
+.btn:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(82, 59, 220, 0.3);
+}
+
+/* Subtle decorative elements */
+.decorative-dots {
+  position: relative;
+}
+
+.decorative-dots::before,
+.decorative-dots::after {
+  content: '';
+  position: absolute;
+  width: 50px;
+  height: 100px;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.15) 2px, transparent 2px);
+  background-size: 12px 12px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.decorative-dots::before {
+  top: 100%;
+  right: 85%;
+}
+
+.decorative-dots::after {
+  bottom: 100%;
+  left: 85%;
+}
+
+/* Smooth transitions for everything */
+* {
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Remove transitions from animations */
+*[class*="animate"],
+*[class*="motion"] {
+  transition: none;
+}
