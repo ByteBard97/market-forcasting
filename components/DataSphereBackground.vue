@@ -74,9 +74,10 @@ onMounted(async () => {
   scene.add(galaxy)
 
   // Load texture
+  const baseUrl = import.meta.env.BASE_URL || '/'
   const loader = new THREE.TextureLoader()
   const dotTexture = await new Promise((resolve) => {
-    loader.load('/dotTexture.png', resolve)
+    loader.load(`${baseUrl}dotTexture.png`, resolve)
   })
 
   // Create dots
