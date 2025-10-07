@@ -3,7 +3,7 @@
     <h1 v-if="title" class="text-3xl font-bold mb-4">{{ title }}</h1>
     <p v-if="subtitle" class="text-lg mb-6 opacity-80">{{ subtitle }}</p>
 
-    <div class="grid grid-cols-2 gap-6" style="height: 34vh;">
+    <div class="grid grid-cols-2 gap-6" style="height: 25vh;">
       <div>
         <slot name="content"></slot>
       </div>

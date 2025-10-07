@@ -63,8 +63,8 @@ const dropChartData = () => {
     drops.forEach(drop => {
       if (i >= drop.day && i < drop.day + drop.duration) {
         const daysFromDrop = i - drop.day
-        // Exponential decay
-        const multiplier = Math.exp(-0.15 * daysFromDrop)
+        // Gradual exponential decay
+        const multiplier = Math.exp(-0.2 * daysFromDrop)
         value += drop.peak * multiplier
 
         if (i === drop.day) {
@@ -101,9 +101,9 @@ const dropChartData = () => {
       }
     ],
     layout: {
-      margin: { l: 50, r: 20, t: 10, b: 35 },
-      xaxis: { gridcolor: '#374151', title: 'Date' },
-      yaxis: { gridcolor: '#374151', title: 'Pairs per Day', range: [0, 250] },
+      margin: { l: 50, r: 20, t: 30, b: 50 },
+      xaxis: { gridcolor: '#374151', title: '' },
+      yaxis: { gridcolor: '#374151', title: 'Pairs per Day', range: [40, 260] },
       showlegend: false
     },
     config: {}

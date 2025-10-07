@@ -242,7 +242,7 @@ onUnmounted(() => {
 .wave-container {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0;
   margin-top: 0.5rem;
 }
 
@@ -271,7 +271,7 @@ onUnmounted(() => {
 
 .wave-canvas {
   width: 100%;
-  height: 8vh;
+  height: 5vh;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
@@ -282,7 +282,7 @@ onUnmounted(() => {
 .addition-row {
   display: flex;
   justify-content: center;
-  padding: 0.1rem 0;
+  padding: 0;
   margin: 0;
 }
 
@@ -293,7 +293,7 @@ onUnmounted(() => {
 }
 
 .result-row {
-  margin-top: 0;
+  margin-top: -0.5rem;
   padding-top: 0.3rem;
   border-top: 2px dashed rgba(255, 255, 255, 0.2);
 }
@@ -304,7 +304,7 @@ onUnmounted(() => {
 }
 
 .result-canvas {
-  height: 10vh;
+  height: 6vh;
   background: rgba(168, 85, 247, 0.08);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(168, 85, 247, 0.3);
@@ -312,7 +312,7 @@ onUnmounted(() => {
 }
 
 .explanation {
-  margin-top: 0.5rem;
+  margin-top: 0.2rem;
   text-align: center;
   font-size: 0.85rem;
   opacity: 0.7;
