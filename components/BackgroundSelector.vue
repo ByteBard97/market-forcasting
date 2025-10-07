@@ -31,6 +31,9 @@ let mouseInMenu = false;
 let visibleSince = null;
 
 const handleMouseMove = (e) => {
+  // Debug: log mouse position
+  //console.log("Mouse moved:", e.clientX, e.clientY);
+
   // Find the slide container - try multiple selectors for Slidev
   const slideContainer =
     document.querySelector(".slidev-slide-content") ||
@@ -44,6 +47,19 @@ const handleMouseMove = (e) => {
   }
 
   const slideRect = slideContainer.getBoundingClientRect();
+
+  // Log the slide dimensions once in a while
+  if (Math.random() < 0.01) {
+    // Log 1% of the time to avoid spam
+    console.log("Slide bounds:", {
+      top: slideRect.top,
+      bottom: slideRect.bottom,
+      left: slideRect.left,
+      right: slideRect.right,
+      height: slideRect.height,
+      width: slideRect.width,
+    });
+  }
 
   // Check if mouse is within the slide bounds
   const mouseInSlide =
@@ -71,20 +87,41 @@ const handleMouseMove = (e) => {
 
   const inBottomEighth = e.clientY >= bottomEighthStart;
 
+  // Log when we're close to the threshold
+  const distanceFromThreshold = Math.abs(e.clientY - bottomEighthStart);
+  if (distanceFromThreshold < 50) {
+    console.log("Near threshold:", {
+      mouseY: e.clientY,
+      threshold: bottomEighthStart,
+      inBottomEighth,
+      slideBottom: slideRect.bottom,
+      distance: distanceFromThreshold,
+    });
+  }
+
   if (inBottomEighth && !mouseInBottomArea) {
     // Just entered bottom 1/8
-    console.log("ENTERED bottom 1/8 of slide!");
+    console.log("ENTERED bottom 1/8 of slide!", {
+      mouseY: e.clientY,
+      threshold: bottomEighthStart,
+      slideBottom: slideRect.bottom,
+    });
 
     mouseInBottomArea = true;
     if (hideTimeout) clearTimeout(hideTimeout);
 
     showTimeout = setTimeout(() => {
       if (mouseInBottomArea) {
-        console.log("SHOWING MENU");
+        console.log("SHOWING MENU - setting isVisible to true");
         isVisible.value = true;
         visibleSince = Date.now();
+
+        // Verify it actually changed
+        setTimeout(() => {
+          console.log("Menu visibility check:", isVisible.value);
+        }, 100);
       }
-    }, 500);
+    }, 100);
   } else if (!inBottomEighth && mouseInBottomArea) {
     // Just left bottom 1/8
     console.log("LEFT bottom 1/8 of slide");
@@ -135,8 +172,13 @@ const handleMenuLeave = () => {
 };
 
 onMounted(() => {
-  console.log("BackgroundSelector mounted");
+  console.log("BackgroundSelector mounted, adding mousemove listener");
+  console.log("handleMouseMove type:", typeof handleMouseMove);
+  console.log("handleMouseMove:", handleMouseMove);
+
   document.addEventListener("mousemove", handleMouseMove);
+
+  console.log("Component is alive, window height:", window.innerHeight);
 });
 
 onUnmounted(() => {
