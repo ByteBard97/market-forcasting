@@ -48,7 +48,14 @@
       "Bash(npm run build:*)",
       "Bash(git add:*)",
       "Bash(git rm:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nFix GitHub Pages paths and add transparent convolution animation\n\n- Fixed absolute paths to use BASE_URL for GitHub Pages compatibility\n  - Updated ComponentsStack.vue to use import.meta.env.BASE_URL\n  - Updated AnimatedTimeline.vue to use import.meta.env.BASE_URL  \n  - Updated ModelPredictions.vue to use import.meta.env.BASE_URL\n  - Updated video src in slides.md to use $slidev.configs.routerBase\n\n- Created 3Blue1Brown-style convolution animation with manim\n  - Shows impulse response kernel sliding across marketing signal\n  - Displays output demand curve building up in real-time\n  - Rendered with transparent background (WebM format)\n  - Used Docker to avoid dependency conflicts\n\n- Rebuilt site with corrected paths for production deployment\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nFix GitHub Pages paths and add transparent convolution animation\n\n- Fixed absolute paths to use BASE_URL for GitHub Pages compatibility\n  - Updated ComponentsStack.vue to use import.meta.env.BASE_URL\n  - Updated AnimatedTimeline.vue to use import.meta.env.BASE_URL  \n  - Updated ModelPredictions.vue to use import.meta.env.BASE_URL\n  - Updated video src in slides.md to use $slidev.configs.routerBase\n\n- Created 3Blue1Brown-style convolution animation with manim\n  - Shows impulse response kernel sliding across marketing signal\n  - Displays output demand curve building up in real-time\n  - Rendered with transparent background (WebM format)\n  - Used Docker to avoid dependency conflicts\n\n- Rebuilt site with corrected paths for production deployment\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(pkill:*)",
+      "Bash(git commit:*)",
+      "Bash(npx:*)",
+      "Bash(find:*)",
+      "Bash(lsof:*)",
+      "mcp__chrome-devtools__wait_for"
     ],
     "deny": [],
     "ask": []

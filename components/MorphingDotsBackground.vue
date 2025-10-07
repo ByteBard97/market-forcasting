@@ -9,9 +9,17 @@ import { gsap } from 'gsap'
 
 const canvas = ref(null)
 let mouseMoveHandler, resizeHandler
+let isVisible = ref(true)
+let intersectionObserver = null
 
 // Register cleanup BEFORE async operations
 onUnmounted(() => {
+  // Kill all GSAP animations
+  gsap.killTweensOf('*')
+
+  if (intersectionObserver) {
+    intersectionObserver.disconnect()
+  }
   if (mouseMoveHandler) {
     window.removeEventListener('mousemove', mouseMoveHandler)
   }
@@ -23,6 +31,14 @@ onUnmounted(() => {
   }
   if (renderer) {
     renderer.dispose()
+    renderer.forceContextLoss()
+  }
+  if (scene) {
+    scene.clear()
+  }
+  if (canvas.value) {
+    canvas.value.width = 0
+    canvas.value.height = 0
   }
 })
 let renderer, scene, camera, dots
@@ -125,6 +141,10 @@ onMounted(async () => {
 
   // Animation loop
   function render() {
+    if (!isVisible.value) {
+      // Don't continue the loop if not visible
+      return
+    }
     attributePositions.needsUpdate = true
     renderer.render(scene, camera)
     animationId = requestAnimationFrame(render)
@@ -155,13 +175,35 @@ onMounted(async () => {
   window.addEventListener('mousemove', mouseMoveHandler)
   window.addEventListener('resize', resizeHandler)
 
-  render()
+  // Set up intersection observer to detect visibility
+  intersectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const wasVisible = isVisible.value
+      isVisible.value = entry.isIntersecting
+
+      // Start animation when becoming visible
+      if (!wasVisible && entry.isIntersecting) {
+        render()
+      }
+    })
+  }, { threshold: 0.1 })
+
+  if (canvas.value) {
+    intersectionObserver.observe(canvas.value)
+  }
+
+  // Start initial render only if visible
+  const rect = canvas.value.getBoundingClientRect()
+  const inViewport = rect.top < window.innerHeight && rect.bottom > 0
+  if (inViewport) {
+    render()
+  }
 })
 </script>
 
 <style scoped>
 .morphing-dots-background {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
