@@ -1,9 +1,9 @@
 ---
 theme: default
-title: Air Jordan Demand Forecasting
+title: Forecasting Air Jordan Demand
 info: |
-  ## Air Jordan Demand Analysis
-  Understanding what drives sneaker demand through data
+  ## Air Jordan Demand Forecasting
+  A Journey Through Modern Time Series Prediction
 class: text-center
 highlighter: shiki
 drawings:
@@ -16,7 +16,15 @@ mdc: true
 
 ---
 
-<SyntheticDataSlide />
+<BusinessChallengeSlide />
+
+---
+
+<DataProblemSlide />
+
+---
+
+<WaveAdditionSlide />
 
 ---
 
@@ -32,6 +40,14 @@ mdc: true
 
 ---
 
+<HolidayEffectsSlide />
+
+---
+
+<DropEventsSlide />
+
+---
+
 <ImpulseResponseSlide />
 
 ---
@@ -40,11 +56,7 @@ mdc: true
 
 ---
 
-<SeasonalPatternsSlide />
-
----
-
-<TimelineSlide />
+<AdditiveCompositionSlide />
 
 ---
 
@@ -52,35 +64,7 @@ mdc: true
 
 ---
 
-<PredictionsSlide />
-
----
-
-<ModelComparisonSlide />
-
----
-
-<FirstResultsSlide />
-
----
-
-<DataLeakageSlide />
-
----
-
-<AfterFixingSlide />
-
----
-
-<RealisticScenarioSlide />
-
----
-
-<FinalResultsSlide />
-
----
-
-<EnhancedRealismSlide />
+<ProphetIntroSlide />
 
 ---
 
@@ -88,10 +72,12 @@ mdc: true
 
 ---
 
-<InventoryRealitySlide />
+<ModelComparisonSlide />
 
 ---
 
-<WhatWeLearnedSlide />
+<InventoryRealitySlide />
+
+---
 
 <DiveDeeperSlide />

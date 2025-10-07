@@ -2,26 +2,22 @@ import { defineAppSetup } from "@slidev/types";
 
 // Import slide components from slides/ folder
 import TitleSlide from "../slides/TitleSlide.vue";
-import SyntheticDataSlide from "../slides/SyntheticDataSlide.vue";
+import BusinessChallengeSlide from "../slides/BusinessChallengeSlide.vue";
+import DataProblemSlide from "../slides/DataProblemSlide.vue";
+import WaveAdditionSlide from "../slides/WaveAdditionSlide.vue";
 import BaselineSlide from "../slides/BaselineSlide.vue";
 import WeeklySeasonalitySlide from "../slides/WeeklySeasonalitySlide.vue";
 import YearlySeasonalitySlide from "../slides/YearlySeasonalitySlide.vue";
+import HolidayEffectsSlide from "../slides/HolidayEffectsSlide.vue";
+import DropEventsSlide from "../slides/DropEventsSlide.vue";
 import ImpulseResponseSlide from "../slides/ImpulseResponseSlide.vue";
 import MarketingEffectSlide from "../slides/MarketingEffectSlide.vue";
-import SeasonalPatternsSlide from "../slides/SeasonalPatternsSlide.vue";
-import TimelineSlide from "../slides/TimelineSlide.vue";
+import AdditiveCompositionSlide from "../slides/AdditiveCompositionSlide.vue";
 import ComponentsStackSlide from "../slides/ComponentsStackSlide.vue";
-import PredictionsSlide from "../slides/PredictionsSlide.vue";
-import ModelComparisonSlide from "../slides/ModelComparisonSlide.vue";
-import FirstResultsSlide from "../slides/FirstResultsSlide.vue";
-import DataLeakageSlide from "../slides/DataLeakageSlide.vue";
-import AfterFixingSlide from "../slides/AfterFixingSlide.vue";
-import RealisticScenarioSlide from "../slides/RealisticScenarioSlide.vue";
-import FinalResultsSlide from "../slides/FinalResultsSlide.vue";
-import EnhancedRealismSlide from "../slides/EnhancedRealismSlide.vue";
+import ProphetIntroSlide from "../slides/ProphetIntroSlide.vue";
 import ProphetForecastSlide from "../slides/ProphetForecastSlide.vue";
+import ModelComparisonSlide from "../slides/ModelComparisonSlide.vue";
 import InventoryRealitySlide from "../slides/InventoryRealitySlide.vue";
-import WhatWeLearnedSlide from "../slides/WhatWeLearnedSlide.vue";
 import DiveDeeperSlide from "../slides/DiveDeeperSlide.vue";
 
 // Import component library from components/ folder
@@ -46,26 +42,22 @@ import ModelPredictions from "../components/ModelPredictions.vue";
 export default defineAppSetup(({ app }) => {
   // Register slide components from slides/ folder
   app.component("TitleSlide", TitleSlide);
-  app.component("SyntheticDataSlide", SyntheticDataSlide);
+  app.component("BusinessChallengeSlide", BusinessChallengeSlide);
+  app.component("DataProblemSlide", DataProblemSlide);
+  app.component("WaveAdditionSlide", WaveAdditionSlide);
   app.component("BaselineSlide", BaselineSlide);
   app.component("WeeklySeasonalitySlide", WeeklySeasonalitySlide);
   app.component("YearlySeasonalitySlide", YearlySeasonalitySlide);
+  app.component("HolidayEffectsSlide", HolidayEffectsSlide);
+  app.component("DropEventsSlide", DropEventsSlide);
   app.component("ImpulseResponseSlide", ImpulseResponseSlide);
   app.component("MarketingEffectSlide", MarketingEffectSlide);
-  app.component("SeasonalPatternsSlide", SeasonalPatternsSlide);
-  app.component("TimelineSlide", TimelineSlide);
+  app.component("AdditiveCompositionSlide", AdditiveCompositionSlide);
   app.component("ComponentsStackSlide", ComponentsStackSlide);
-  app.component("PredictionsSlide", PredictionsSlide);
-  app.component("ModelComparisonSlide", ModelComparisonSlide);
-  app.component("FirstResultsSlide", FirstResultsSlide);
-  app.component("DataLeakageSlide", DataLeakageSlide);
-  app.component("AfterFixingSlide", AfterFixingSlide);
-  app.component("RealisticScenarioSlide", RealisticScenarioSlide);
-  app.component("FinalResultsSlide", FinalResultsSlide);
-  app.component("EnhancedRealismSlide", EnhancedRealismSlide);
+  app.component("ProphetIntroSlide", ProphetIntroSlide);
   app.component("ProphetForecastSlide", ProphetForecastSlide);
+  app.component("ModelComparisonSlide", ModelComparisonSlide);
   app.component("InventoryRealitySlide", InventoryRealitySlide);
-  app.component("WhatWeLearnedSlide", WhatWeLearnedSlide);
   app.component("DiveDeeperSlide", DiveDeeperSlide);
 
   // Register supporting components from components/ folder

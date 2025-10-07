@@ -1,9 +1,9 @@
 <template>
   <SlideLayout background="sphere" no-padding>
     <div class="title-card">
-      <h1 class="main-title">Demand Forecasting with Causal Structure</h1>
+      <h1 class="main-title">Forecasting Air Jordan Demand</h1>
       <p class="subtitle">
-        Building realistic synthetic data for time series prediction
+        A Journey Through Modern Time Series Prediction
       </p>
       <div class="pt-6">
         <span

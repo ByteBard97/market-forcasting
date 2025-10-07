@@ -21,10 +21,10 @@
             <li>Ends at <strong>~97 pairs/day</strong> (after 6 years)</li>
             <li>Represents organic brand growth</li>
           </ul>
-          <div class="mt-4 p-3 bg-yellow-900 bg-opacity-20 rounded text-xs">
-            <strong>Why multiplicative?</strong><br />
-            In retail, a 10% promo on 100 units ≠ 10% promo on 50 units.<br />
-            Effects scale with baseline level.
+          <div class="mt-4 p-3 bg-blue-900 bg-opacity-20 rounded text-xs">
+            <strong>Foundation layer:</strong><br />
+            All other components add to this baseline.<br />
+            Represents organic brand growth over time.
           </div>
         </div>
       </template>
@@ -60,8 +60,8 @@ const baselineChartData = () => {
       },
     ],
     layout: {
-      margin: { l: 50, r: 20, t: 10, b: 35 },
-      xaxis: { gridcolor: "#374151", title: "Date" },
+      margin: { l: 50, r: 20, t: 10, b: 50 },
+      xaxis: { gridcolor: "#374151", title: "" },
       yaxis: { gridcolor: "#374151", title: "Pairs per Day", range: [0, 120] },
       showlegend: false,
     },
