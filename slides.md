@@ -48,7 +48,7 @@ mdc: true
 
 ---
 
-<ImpulseResponseSlide />
+<PriceElasticitySlide />
 
 ---
 
@@ -77,6 +77,10 @@ mdc: true
 ---
 
 <InventoryRealitySlide />
+
+---
+
+<HowToUseSlide />
 
 ---
 

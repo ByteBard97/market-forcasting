@@ -64,7 +64,12 @@
       "Bash(echo:*)",
       "Bash(done)",
       "Bash(pgrep:*)",
-      "Bash(DISPLAY=:0 import -window root -crop 1920x1080+0+0 /tmp/slide4.png)"
+      "Bash(DISPLAY=:0 import -window root -crop 1920x1080+0+0 /tmp/slide4.png)",
+      "Bash(do curl -s \"http://localhost:3030/$i\")",
+      "mcp__chrome-devtools__fill",
+      "Bash(for i in {1..19})",
+      "Bash(do echo \"Slide $i\")",
+      "Bash(for i in {5..19})"
     ],
     "deny": [],
     "ask": []

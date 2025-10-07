@@ -10,7 +10,7 @@ import WeeklySeasonalitySlide from "../slides/WeeklySeasonalitySlide.vue";
 import YearlySeasonalitySlide from "../slides/YearlySeasonalitySlide.vue";
 import HolidayEffectsSlide from "../slides/HolidayEffectsSlide.vue";
 import DropEventsSlide from "../slides/DropEventsSlide.vue";
-import ImpulseResponseSlide from "../slides/ImpulseResponseSlide.vue";
+import PriceElasticitySlide from "../slides/PriceElasticitySlide.vue";
 import MarketingEffectSlide from "../slides/MarketingEffectSlide.vue";
 import AdditiveCompositionSlide from "../slides/AdditiveCompositionSlide.vue";
 import ComponentsStackSlide from "../slides/ComponentsStackSlide.vue";
@@ -18,6 +18,7 @@ import ProphetIntroSlide from "../slides/ProphetIntroSlide.vue";
 import ProphetForecastSlide from "../slides/ProphetForecastSlide.vue";
 import ModelComparisonSlide from "../slides/ModelComparisonSlide.vue";
 import InventoryRealitySlide from "../slides/InventoryRealitySlide.vue";
+import HowToUseSlide from "../slides/HowToUseSlide.vue";
 import DiveDeeperSlide from "../slides/DiveDeeperSlide.vue";
 
 // Import component library from components/ folder
@@ -50,7 +51,7 @@ export default defineAppSetup(({ app }) => {
   app.component("YearlySeasonalitySlide", YearlySeasonalitySlide);
   app.component("HolidayEffectsSlide", HolidayEffectsSlide);
   app.component("DropEventsSlide", DropEventsSlide);
-  app.component("ImpulseResponseSlide", ImpulseResponseSlide);
+  app.component("PriceElasticitySlide", PriceElasticitySlide);
   app.component("MarketingEffectSlide", MarketingEffectSlide);
   app.component("AdditiveCompositionSlide", AdditiveCompositionSlide);
   app.component("ComponentsStackSlide", ComponentsStackSlide);
@@ -58,6 +59,7 @@ export default defineAppSetup(({ app }) => {
   app.component("ProphetForecastSlide", ProphetForecastSlide);
   app.component("ModelComparisonSlide", ModelComparisonSlide);
   app.component("InventoryRealitySlide", InventoryRealitySlide);
+  app.component("HowToUseSlide", HowToUseSlide);
   app.component("DiveDeeperSlide", DiveDeeperSlide);
 
   // Register supporting components from components/ folder
