@@ -80,8 +80,8 @@ async function initChart() {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
-      top: '10%',
+      bottom: '8%',
+      top: '12%',
       containLabel: true
     },
     tooltip: {
@@ -100,7 +100,7 @@ async function initChart() {
       }
     },
     legend: {
-      data: ['Actual', 'Forecast', '95% Interval'],
+      data: ['Actual', 'Forecast'],
       textStyle: { color: '#9ca3af', fontSize: 11 },
       top: 0
     },
@@ -190,7 +190,6 @@ async function initChart() {
 .chart-wrapper {
   width: 100%;
   height: 100%;
-  min-height: 400px;
   position: relative;
 }
 

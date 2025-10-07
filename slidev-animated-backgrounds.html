@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Animation Libraries Comparison</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/granim@2.0.0/dist/granim.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .library-label {
+            font-size: 10px;
+            opacity: 0.6;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .demo-container {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+        }
+
+        .demo-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease;
+            pointer-events: none;
+        }
+
+        .demo-section.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+        }
+
+        #vanta-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        #granim-canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        #three-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        #custom-canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .content-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 600px;
+        }
+
+        .content-overlay h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content-overlay p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card h3 {
+            font-size: 14px;
+            margin-bottom: 0.5rem;
+            color: #667eea;
+        }
+
+        .feature-card p {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            min-width: 250px;
+        }
+
+        .control-title {
+            font-size: 14px;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 12px;
+        }
+
+        .info-label {
+            opacity: 0.6;
+        }
+
+        .info-value {
+            color: #667eea;
+            font-family: monospace;
+        }
+
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .loading-indicator {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <button class="btn active" onclick="showLibrary('particles')" data-lib="particles">
+                Particles.js
+                <span class="library-label">Particle System</span>
+            </button>
+            <button class="btn" onclick="showLibrary('vanta')" data-lib="vanta">
+                Vanta.js
+                <span class="library-label">3D Waves</span>
+            </button>
+            <button class="btn" onclick="showLibrary('three')" data-lib="three">
+                Three.js
+                <span class="library-label">Custom Shader</span>
+            </button>
+            <button class="btn" onclick="showLibrary('granim')" data-lib="granim">
+                Granim.js
+                <span class="library-label">Gradient Animation</span>
+            </button>
+            <button class="btn" onclick="showLibrary('custom')" data-lib="custom">
+                Custom Canvas
+                <span class="library-label">Flowing Ribbons</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="demo-container">
+        <!-- Particles.js -->
+        <div class="demo-section active" id="particles-section">
+            <div id="particles-js"></div>
+        </div>
+
+        <!-- Vanta.js -->
+        <div class="demo-section" id="vanta-section">
+            <div id="vanta-bg"></div>
+        </div>
+
+        <!-- Three.js -->
+        <div class="demo-section" id="three-section">
+            <div id="three-container"></div>
+        </div>
+
+        <!-- Granim.js -->
+        <div class="demo-section" id="granim-section">
+            <canvas id="granim-canvas"></canvas>
+        </div>
+
+        <!-- Custom Canvas -->
+        <div class="demo-section" id="custom-section">
+            <canvas id="custom-canvas"></canvas>
+        </div>
+
+        <!-- Content Overlay -->
+        <div class="content-overlay">
+            <h1 id="library-title">Particles.js</h1>
+            <p id="library-description">Interactive particle system with connections</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Performance</h3>
+                    <p id="performance">Excellent</p>
+                </div>
+                <div class="feature-card">
+                    <h3>File Size</h3>
+                    <p id="filesize">39KB</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Customization</h3>
+                    <p id="customization">High</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="control-title">Library Info</div>
+        <div class="info-item">
+            <span class="info-label">Current Library:</span>
+            <span class="info-value" id="current-lib">particles.js</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Render Type:</span>
+            <span class="info-value" id="render-type">Canvas 2D</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Dependencies:</span>
+            <span class="info-value" id="dependencies">None</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">GitHub Stars:</span>
+            <span class="info-value" id="github-stars">~29k</span>
+        </div>
+    </div>
+
+    <script>
+        let currentLibrary = 'particles';
+        let vantaEffect = null;
+        let threeScene = null;
+        let granimInstance = null;
+        let customAnimation = null;
+
+        const libraryInfo = {
+            particles: {
+                title: 'Particles.js',
+                description: 'Interactive particle system with connections',
+                performance: 'Excellent',
+                filesize: '39KB',
+                customization: 'High',
+                renderType: 'Canvas 2D',
+                dependencies: 'None',
+                stars: '~29k'
+            },
+            vanta: {
+                title: 'Vanta.js',
+                description: '3D animated waves using Three.js',
+                performance: 'Good',
+                filesize: '~200KB total',
+                customization: 'Medium',
+                renderType: 'WebGL/Three.js',
+                dependencies: 'Three.js',
+                stars: '~3k'
+            },
+            three: {
+                title: 'Three.js',
+                description: 'Custom WebGL shader animation',
+                performance: 'Excellent',
+                filesize: '~600KB',
+                customization: 'Unlimited',
+                renderType: 'WebGL',
+                dependencies: 'None',
+                stars: '~95k'
+            },
+            granim: {
+                title: 'Granim.js',
+                description: 'Smooth gradient transitions',
+                performance: 'Excellent',
+                filesize: '17KB',
+                customization: 'Medium',
+                renderType: 'Canvas 2D',
+                dependencies: 'None',
+                stars: '~5k'
+            },
+            custom: {
+                title: 'Custom Canvas',
+                description: 'Flowing ribbon animation',
+                performance: 'Excellent',
+                filesize: 'Inline (~3KB)',
+                customization: 'Unlimited',
+                renderType: 'Canvas 2D',
+                dependencies: 'None',
+                stars: 'N/A'
+            }
+        };
+
+        function showLibrary(library) {
+            currentLibrary = library;
+            
+            // Update buttons
+            document.querySelectorAll('.btn').forEach(btn => {
+                if (btn.dataset.lib === library) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Hide all sections
+            document.querySelectorAll('.demo-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Update info
+            const info = libraryInfo[library];
+            document.getElementById('library-title').textContent = info.title;
+            document.getElementById('library-description').textContent = info.description;
+            document.getElementById('performance').textContent = info.performance;
+            document.getElementById('filesize').textContent = info.filesize;
+            document.getElementById('customization').textContent = info.customization;
+            document.getElementById('current-lib').textContent = library + '.js';
+            document.getElementById('render-type').textContent = info.renderType;
+            document.getElementById('dependencies').textContent = info.dependencies;
+            document.getElementById('github-stars').textContent = info.stars;
+            
+            // Clean up previous animations
+            cleanupAnimations();
+            
+            // Show and initialize selected library
+            switch(library) {
+                case 'particles':
+                    document.getElementById('particles-section').classList.add('active');
+                    initParticles();
+                    break;
+                case 'vanta':
+                    document.getElementById('vanta-section').classList.add('active');
+                    initVanta();
+                    break;
+                case 'three':
+                    document.getElementById('three-section').classList.add('active');
+                    initThree();
+                    break;
+                case 'granim':
+                    document.getElementById('granim-section').classList.add('active');
+                    initGranim();
+                    break;
+                case 'custom':
+                    document.getElementById('custom-section').classList.add('active');
+                    initCustom();
+                    break;
+            }
+        }
+
+        function cleanupAnimations() {
+            if (vantaEffect) {
+                vantaEffect.destroy();
+                vantaEffect = null;
+            }
+            if (threeScene && threeScene.renderer) {
+                threeScene.renderer.dispose();
+                threeScene = null;
+            }
+            if (granimInstance) {
+                granimInstance.pause();
+                granimInstance = null;
+            }
+            if (customAnimation) {
+                cancelAnimationFrame(customAnimation);
+                customAnimation = null;
+            }
+        }
+
+        // Initialize Particles.js
+        function initParticles() {
+            if (typeof particlesJS === 'undefined') return;
+            
+            particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 80,
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: '#ffffff'
+                    },
+                    shape: {
+                        type: 'circle'
+                    },
+                    opacity: {
+                        value: 0.5,
+                        random: false,
+                        anim: {
+                            enable: false
+                        }
+                    },
+                    size: {
+                        value: 3,
+                        random: true,
+                        anim: {
+                            enable: false
+                        }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: '#ffffff',
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: 'none',
+                        random: false,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false,
+                        attract: {
+                            enable: false
+                        }
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: 'repulse'
+                        },
+                        onclick: {
+                            enable: true,
+                            mode: 'push'
+                        },
+                        resize: true
+                    },
+                    modes: {
+                        repulse: {
+                            distance: 100
+                        },
+                        push: {
+                            particles_nb: 4
+                        }
+                    }
+                },
+                retina_detect: true
+            });
+        }
+
+        // Initialize Vanta.js
+        function initVanta() {
+            if (typeof VANTA === 'undefined') return;
+            
+            try {
+                vantaEffect = VANTA.WAVES({
+                    el: '#vanta-bg',
+                    mouseControls: true,
+                    touchControls: true,
+                    gyroControls: false,
+                    minHeight: 200.00,
+                    minWidth: 200.00,
+                    scale: 1.00,
+                    scaleMobile: 1.00,
+                    color: 0x1e3c72,
+                    shininess: 60.00,
+                    waveHeight: 30.00,
+                    waveSpeed: 1.00,
+                    zoom: 0.65
+                });
+            } catch (error) {
+                console.error('Vanta.js initialization failed:', error);
+            }
+        }
+
+        // Initialize Three.js custom shader
+        function initThree() {
+            const container = document.getElementById('three-container');
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.innerHTML = '';
+            container.appendChild(renderer.domElement);
+            
+            // Create animated plane with shader material
+            const geometry = new THREE.PlaneGeometry(20, 20, 100, 100);
+            
+            const vertexShader = `
+                varying vec2 vUv;
+                uniform float time;
+                
+                void main() {
+                    vUv = uv;
+                    vec3 pos = position;
+                    pos.z = sin(pos.x * 0.3 + time) * 0.5 + cos(pos.y * 0.3 + time * 0.8) * 0.5;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                }
+            `;
+            
+            const fragmentShader = `
+                varying vec2 vUv;
+                uniform float time;
+                
+                void main() {
+                    vec3 color1 = vec3(0.4, 0.5, 0.9);
+                    vec3 color2 = vec3(0.9, 0.4, 0.7);
+                    vec3 color = mix(color1, color2, sin(vUv.x * 10.0 + time) * 0.5 + 0.5);
+                    gl_FragColor = vec4(color, 0.8);
+                }
+            `;
+            
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 }
+                },
+                vertexShader,
+                fragmentShader,
+                transparent: true
+            });
+            
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+            
+            camera.position.z = 10;
+            
+            threeScene = { scene, camera, renderer, material };
+            
+            function animate() {
+                if (currentLibrary !== 'three') return;
+                
+                requestAnimationFrame(animate);
+                
+                if (material.uniforms) {
+                    material.uniforms.time.value += 0.01;
+                }
+                
+                mesh.rotation.x += 0.001;
+                mesh.rotation.y += 0.001;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+        }
+
+        // Initialize Granim.js
+        function initGranim() {
+            if (typeof Granim === 'undefined') return;
+            
+            granimInstance = new Granim({
+                element: '#granim-canvas',
+                direction: 'diagonal',
+                isPausedWhenNotInView: true,
+                states: {
+                    'default-state': {
+                        gradients: [
+                            ['#ff9966', '#ff5e62'],
+                            ['#00F260', '#0575E6'],
+                            ['#e1eec3', '#f05053'],
+                            ['#667eea', '#764ba2']
+                        ],
+                        transitionSpeed: 2000
+                    }
+                }
+            });
+        }
+
+        // Initialize Custom Canvas
+        function initCustom() {
+            const canvas = document.getElementById('custom-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            let time = 0;
+            const ribbons = [];
+            
+            // Create flowing ribbons
+            for (let i = 0; i < 5; i++) {
+                ribbons.push({
+                    y: Math.random() * canvas.height,
+                    amplitude: 50 + Math.random() * 100,
+                    wavelength: 0.001 + Math.random() * 0.002,
+                    speed: 0.5 + Math.random() * 1.5,
+                    thickness: 100 + Math.random() * 200,
+                    opacity: 0.1 + Math.random() * 0.2,
+                    color: `hsl(${200 + Math.random() * 160}, 70%, 50%)`
+                });
+            }
+            
+            function draw() {
+                if (currentLibrary !== 'custom') return;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.globalCompositeOperation = 'screen';
+                
+                ribbons.forEach((ribbon, index) => {
+                    ctx.beginPath();
+                    
+                    for (let x = -100; x <= canvas.width + 100; x += 10) {
+                        const y = ribbon.y + 
+                            Math.sin(x * ribbon.wavelength + time * ribbon.speed) * ribbon.amplitude +
+                            Math.cos(x * ribbon.wavelength * 0.5 + time * ribbon.speed * 0.7) * ribbon.amplitude * 0.5;
+                        
+                        if (x === -100) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                    
+                    ctx.lineTo(canvas.width + 100, canvas.height);
+                    ctx.lineTo(-100, canvas.height);
+                    ctx.closePath();
+                    
+                    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                    gradient.addColorStop(0, ribbon.color.replace('50%', '60%').replace(')', `, ${ribbon.opacity})`));
+                    gradient.addColorStop(0.5, ribbon.color.replace('50%', '50%').replace(')', `, ${ribbon.opacity * 1.5})`));
+                    gradient.addColorStop(1, ribbon.color.replace('50%', '40%').replace(')', `, ${ribbon.opacity})`));
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = ribbon.color;
+                    ctx.fill();
+                });
+                
+                ctx.globalCompositeOperation = 'source-over';
+                
+                time += 0.01;
+                customAnimation = requestAnimationFrame(draw);
+            }
+            
+            draw();
+        }
+
+        // Initialize first library
+        initParticles();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (currentLibrary === 'three' && threeScene) {
+                threeScene.camera.aspect = window.innerWidth / window.innerHeight;
+                threeScene.camera.updateProjectionMatrix();
+                threeScene.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+            if (currentLibrary === 'custom') {
+                const canvas = document.getElementById('custom-canvas');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -78,8 +78,8 @@ async function initChart() {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
-      top: '12%',
+      bottom: '8%',
+      top: '15%',
       containLabel: true
     },
     tooltip: {
@@ -186,7 +186,6 @@ async function initChart() {
 .chart-wrapper {
   width: 100%;
   height: 100%;
-  min-height: 400px;
   position: relative;
 }
 

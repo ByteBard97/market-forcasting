@@ -187,7 +187,7 @@ class AirJordanDemandGenerator:
                     for offset in range(5):
                         idx = i + offset
                         if idx < self.n_periods:
-                            holiday_mult[idx] *= 2.5  # 150% boost
+                            holiday_mult[idx] *= 1.5  # 50% boost
                             holiday_flag[idx] = 1
 
                 # Christmas season (4 weeks before)
@@ -196,13 +196,13 @@ class AirJordanDemandGenerator:
                         idx = i + offset
                         if 0 <= idx < self.n_periods:
                             days_to_xmas = abs(offset)
-                            boost = 0.3 + 0.03 * (28 - days_to_xmas)  # ramp up
+                            boost = 0.1 + 0.01 * (28 - days_to_xmas)  # ramp up
                             holiday_mult[idx] *= (1 + boost)
                             holiday_flag[idx] = 1
 
                 # Other major holidays
                 elif any(h in holiday_name for h in ["New Year", "Memorial", "Labor", "Independence"]):
-                    holiday_mult[i] *= 1.4
+                    holiday_mult[i] *= 1.2
                 else:
                     holiday_mult[i] *= 1.2
 
@@ -507,8 +507,8 @@ class AirJordanDemandGenerator:
         event_indices = np.random.choice(self.n_periods, size=n_total_events, replace=False)
 
         for event_idx in event_indices:
-            # Viral strength (50-200% boost)
-            strength = np.random.uniform(0.5, 2.0)
+            # Viral strength (20-60% boost)
+            strength = np.random.uniform(0.2, 0.6)
 
             # Initial spike (day 0-2)
             spike_duration = min(3, self.n_periods - event_idx) if self.freq == "D" else 1

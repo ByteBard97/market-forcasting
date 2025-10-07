@@ -1,6 +1,7 @@
 <template>
   <div class="particles-container">
     <Particles
+      v-if="isReady"
       id="tsparticles"
       :particlesInit="particlesInit"
       :options="options"
@@ -9,18 +10,29 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import Particles from "@tsparticles/vue3";
 import { loadSlim } from "@tsparticles/slim";
 
+const isReady = ref(false)
+
 // Initialize tsParticles engine
 const particlesInit = async (engine) => {
-  await loadSlim(engine);
+  try {
+    await loadSlim(engine);
+  } catch (error) {
+    console.error('Failed to load particles:', error);
+  }
 };
 
 // Will be called when particles container is created
 const onParticlesLoaded = async (container) => {
   console.log('Particles container loaded', container);
 };
+
+onMounted(() => {
+  isReady.value = true
+})
 
 // tsParticles configuration - subtle network effect
 const options = {

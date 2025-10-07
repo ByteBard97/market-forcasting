@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp"]
+    },
+    "code-graph-mcp": {
+      "type": "stdio",
+      "command": "/home/geoff/anaconda3/envs/codegraph/bin/code-graph-mcp",
+      "args": ["--project-root", "/home/geoff/projects/ceres/grower-irrigation-insights"],
+      "env": { "PYTHONNOUSERSITE": "1" }
+    }
+  }
+}
