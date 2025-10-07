@@ -304,7 +304,7 @@ The key to realistic causality
     </div>
   </div>
   <div class="glass-background flex items-center justify-center p-4">
-    <ImpulseAnimation />
+    <video :src="`${$slidev.configs.routerBase}media/videos/convolution_animation/720p30/ConvolutionAnimation.webm`" autoplay loop muted class="w-full h-full object-contain"></video>
   </div>
 </div>
 

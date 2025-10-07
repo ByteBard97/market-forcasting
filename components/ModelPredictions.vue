@@ -53,7 +53,8 @@ onUnmounted(() => {
 
 async function initChart() {
   try {
-    const response = await fetch(`/data/AirJordan_NA_DTC.json?t=${Date.now()}`)
+    const baseUrl = import.meta.env.BASE_URL || '/'
+    const response = await fetch(`${baseUrl}data/AirJordan_NA_DTC.json?t=${Date.now()}`)
     const data = await response.json()
 
     // Sample every 7 days for full dataset visibility
