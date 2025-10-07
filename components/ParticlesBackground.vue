@@ -1,110 +1,104 @@
 <template>
-  <div class="particles-container">
-    <Particles
-      v-if="isReady"
-      id="tsparticles"
-      :particlesInit="particlesInit"
-      :options="options"
-    />
-  </div>
+  <div id="particles-js" class="particles-container"></div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import Particles from "@tsparticles/vue3";
-import { loadSlim } from "@tsparticles/slim";
+import { onMounted, onUnmounted } from 'vue'
 
-const isReady = ref(false)
-
-// Initialize tsParticles engine
-const particlesInit = async (engine) => {
-  try {
-    await loadSlim(engine);
-  } catch (error) {
-    console.error('Failed to load particles:', error);
-  }
-};
-
-// Will be called when particles container is created
-const onParticlesLoaded = async (container) => {
-  console.log('Particles container loaded', container);
-};
+let particlesInstance = null
 
 onMounted(() => {
-  isReady.value = true
+  // Load particles.js from CDN
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js'
+  script.onload = () => {
+    // Initialize particles.js with the exact config from the working example
+    if (window.particlesJS) {
+      window.particlesJS('particles-js', {
+        particles: {
+          number: {
+            value: 80,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: '#ffffff'
+          },
+          shape: {
+            type: 'circle'
+          },
+          opacity: {
+            value: 0.5,
+            random: false,
+            anim: {
+              enable: false
+            }
+          },
+          size: {
+            value: 3,
+            random: true,
+            anim: {
+              enable: false
+            }
+          },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: '#ffffff',
+            opacity: 0.4,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 2,
+            direction: 'none',
+            random: false,
+            straight: false,
+            out_mode: 'out',
+            bounce: false,
+            attract: {
+              enable: false
+            }
+          }
+        },
+        interactivity: {
+          detect_on: 'canvas',
+          events: {
+            onhover: {
+              enable: true,
+              mode: 'repulse'
+            },
+            onclick: {
+              enable: true,
+              mode: 'push'
+            },
+            resize: true
+          },
+          modes: {
+            repulse: {
+              distance: 100
+            },
+            push: {
+              particles_nb: 4
+            }
+          }
+        },
+        retina_detect: true
+      })
+    }
+  }
+  document.head.appendChild(script)
 })
 
-// tsParticles configuration - subtle network effect
-const options = {
-  background: {
-    color: {
-      value: 'transparent',
-    },
-  },
-  fpsLimit: 60,
-  interactivity: {
-    events: {
-      onHover: {
-        enable: true,
-        mode: 'grab',
-      },
-      onClick: {
-        enable: true,
-        mode: 'push',
-      },
-    },
-    modes: {
-      grab: {
-        distance: 140,
-        links: {
-          opacity: 0.8,
-        },
-      },
-      push: {
-        quantity: 4,
-      },
-    },
-  },
-  particles: {
-    color: {
-      value: '#ffffff',
-    },
-    links: {
-      color: '#ffffff',
-      distance: 150,
-      enable: true,
-      opacity: 0.3,
-      width: 1,
-    },
-    move: {
-      direction: 'none',
-      enable: true,
-      outModes: {
-        default: 'bounce',
-      },
-      random: false,
-      speed: 1,
-      straight: false,
-    },
-    number: {
-      density: {
-        enable: true,
-        area: 800,
-      },
-      value: 60,
-    },
-    opacity: {
-      value: 0.5,
-    },
-    shape: {
-      type: 'circle',
-    },
-    size: {
-      value: { min: 1, max: 3 },
-    },
-  },
-  detectRetina: true,
-};
+onUnmounted(() => {
+  // Clean up
+  if (window.pJSDom && window.pJSDom.length > 0) {
+    window.pJSDom[0].pJS.fn.vendors.destroypJS()
+    window.pJSDom = []
+  }
+})
 </script>
 
 <style scoped>

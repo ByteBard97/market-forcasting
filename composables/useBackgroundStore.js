@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 
 // Global reactive state for background selection
-const currentBackground = ref('ribbons')
+const currentBackground = ref('datasphere')
 
 export function useBackgroundStore() {
   function setBackground(type) {

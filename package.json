@@ -35,6 +35,9 @@
     "chartjs-adapter-date-fns": "^3.0.0",
     "echarts": "^6.0.0",
     "glslCanvas": "^0.2.6",
+    "gsap": "^3.13.0",
+    "simplex-noise": "^4.0.3",
+    "three": "^0.180.0",
     "vue-echarts": "^8.0.0"
   }
 }

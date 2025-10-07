@@ -1,10 +1,10 @@
 import { defineAppSetup } from '@slidev/types'
-import GradientBackground from '../components/GradientBackground.vue'
-import ParticlesBackground from '../components/ParticlesBackground.vue'
-import ShaderBackground from '../components/ShaderBackground.vue'
-import RibbonsBackground from '../components/RibbonsBackground.vue'
-import WavesBackground from '../components/WavesBackground.vue'
-import OctogramsBackground from '../components/OctogramsBackground.vue'
+import DataSphereBackground from '../components/DataSphereBackground.vue'
+import MorphingDotsBackground from '../components/MorphingDotsBackground.vue'
+import PerlinNoiseBackground from '../components/PerlinNoiseBackground.vue'
+import SurfaceLinesBackground from '../components/SurfaceLinesBackground.vue'
+import DistortedCubeBackground from '../components/DistortedCubeBackground.vue'
+import TentacleBackground from '../components/TentacleBackground.vue'
 import AnimatedBackground from '../components/AnimatedBackground.vue'
 import DemandOverviewChart from '../components/DemandOverviewChart.vue'
 import ComponentsChart from '../components/ComponentsChart.vue'
@@ -18,12 +18,12 @@ import BackgroundSelector from '../components/BackgroundSelector.vue'
 
 export default defineAppSetup(({ app }) => {
   // Register background components
-  app.component('GradientBackground', GradientBackground)
-  app.component('ParticlesBackground', ParticlesBackground)
-  app.component('ShaderBackground', ShaderBackground)
-  app.component('RibbonsBackground', RibbonsBackground)
-  app.component('WavesBackground', WavesBackground)
-  app.component('OctogramsBackground', OctogramsBackground)
+  app.component('DataSphereBackground', DataSphereBackground)
+  app.component('MorphingDotsBackground', MorphingDotsBackground)
+  app.component('PerlinNoiseBackground', PerlinNoiseBackground)
+  app.component('SurfaceLinesBackground', SurfaceLinesBackground)
+  app.component('DistortedCubeBackground', DistortedCubeBackground)
+  app.component('TentacleBackground', TentacleBackground)
   app.component('AnimatedBackground', AnimatedBackground)
   app.component('BackgroundSelector', BackgroundSelector)
 
