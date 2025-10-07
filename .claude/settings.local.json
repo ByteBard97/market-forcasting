@@ -34,7 +34,8 @@
       "Bash(git clone:*)",
       "Read(///**)",
       "WebFetch(domain:plotly.com)",
-      "Bash(/home/geoff/anaconda3/envs/market-forecasting/bin/pip install manim)"
+      "Bash(/home/geoff/anaconda3/envs/market-forecasting/bin/pip install manim)",
+      "Bash(/home/geoff/anaconda3/envs/market-forecasting/bin/conda install -c conda-forge pango -y)"
     ],
     "deny": [],
     "ask": []
