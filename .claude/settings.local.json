@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(conda:*)",
+      "WebSearch",
+      "WebFetch(domain:www.nixtla.io)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:nixtlaverse.nixtla.io)",
+      "Bash(pip install:*)",
+      "Bash(/home/geoff/anaconda3/envs/market-forecasting/bin/pip install timesynth)",
+      "Bash(/home/geoff/anaconda3/envs/market-forecasting/bin/python shoe_demand_generator.py)",
+      "Bash(/home/geoff/anaconda3/envs/market-forecasting/bin/python visualize_segments.py)",
+      "Bash(/home/geoff/anaconda3/envs/market-forecasting/bin/python shoe_demand_generator.py --output-dir ./data)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(/home/geoff/anaconda3/envs/market-forecasting/bin/python model_benchmark.py)",
+      "Bash(cat:*)",
+      "Bash(awk:*)",
+      "Bash(/home/geoff/anaconda3/envs/market-forecasting/bin/python:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(python3:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,153 @@
+/* Container Query support for responsive slides */
+
+.container-cq {
+  container-type: size;  /* Track both width AND height for cqw/cqh */
+  container-name: slide;
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive typography using container units */
+@container slide (min-width: 800px) {
+  h1 {
+    font-size: 7cqw;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 5cqw;
+  }
+
+  h3 {
+    font-size: 3.5cqw;
+  }
+
+  p {
+    font-size: 2.5cqw;
+  }
+}
+
+@container slide (max-width: 800px) {
+  h1 {
+    font-size: 8cqw;
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-size: 6cqw;
+  }
+
+  h3 {
+    font-size: 4cqw;
+  }
+
+  p {
+    font-size: 3cqw;
+  }
+}
+
+/* Chart containers scale with slide */
+.chart {
+  height: 60cqh;
+  width: 100%;
+}
+
+/* KPI tiles */
+.kpi {
+  font-size: 3.2cqw;
+  font-weight: bold;
+  color: #2563eb;
+}
+
+.kpi-label {
+  font-size: 1.8cqw;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Fallback for browsers without container query support */
+@supports not (container-type: inline-size) {
+  h1 {
+    font-size: clamp(24px, 5vw, 64px);
+  }
+
+  h2 {
+    font-size: clamp(20px, 4vw, 48px);
+  }
+
+  h3 {
+    font-size: clamp(18px, 3vw, 36px);
+  }
+
+  p {
+    font-size: clamp(14px, 2vw, 24px);
+  }
+}
+
+/* Animated Backgrounds */
+
+/* 1. CSS Gradient Animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-bg {
+  background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #533483);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+/* 2. Particle background (CSS-only version) */
+.particles-bg {
+  background-color: #0a0a0a;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 90% 40%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 60% 70%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 30% 90%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 200% 200%;
+  animation: particleFloat 20s ease-in-out infinite;
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    background-position: 0% 0%, 100% 100%, 50% 50%, 75% 25%, 25% 75%, 10% 90%;
+  }
+  50% {
+    background-position: 100% 100%, 0% 0%, 75% 25%, 25% 75%, 50% 50%, 90% 10%;
+  }
+}
+
+/* 3. Cosmic shader-like effect (CSS-only approximation) */
+.shader-bg {
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(83, 52, 131, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 70%, rgba(15, 52, 96, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 30%, rgba(22, 33, 62, 0.5) 0%, transparent 50%),
+    linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+  background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+  animation: cosmicFlow 20s ease-in-out infinite;
+}
+
+@keyframes cosmicFlow {
+  0%, 100% {
+    background-position: 0% 0%, 100% 100%, 50% 50%, 0% 0%;
+  }
+  33% {
+    background-position: 100% 100%, 0% 0%, 25% 75%, 0% 0%;
+  }
+  66% {
+    background-position: 50% 50%, 50% 50%, 75% 25%, 0% 0%;
+  }
+}

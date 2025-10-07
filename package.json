@@ -1,0 +1,40 @@
+{
+  "name": "market-forcasting",
+  "version": "1.0.0",
+  "description": "A retail sales forecasting application designed to help business analysts predict next year's sales by franchise/silo, compare multiple forecasting models, and run what-if scenarios.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "slidev slides.md",
+    "build": "slidev build slides.md",
+    "export": "slidev export slides.md"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ByteBard97/market-forcasting.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ByteBard97/market-forcasting/issues"
+  },
+  "homepage": "https://github.com/ByteBard97/market-forcasting#readme",
+  "devDependencies": {
+    "@slidev/cli": "^52.2.5",
+    "@slidev/theme-default": "^0.25.0",
+    "plotly.js-dist-min": "^3.1.1",
+    "vue": "^3.5.22"
+  },
+  "dependencies": {
+    "@tsparticles/slim": "^3.9.1",
+    "@tsparticles/vue3": "^3.0.1",
+    "chart.js": "^4.5.0",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "echarts": "^6.0.0",
+    "glslCanvas": "^0.2.6",
+    "vue-echarts": "^8.0.0"
+  }
+}
