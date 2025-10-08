@@ -27,6 +27,7 @@ const props = defineProps({
   position: relative;
   width: 100%;
   height: 100%;
+  container-type: size; /* Enable cqh/cqw for all slide content */
 }
 
 .slide-background {
@@ -42,9 +43,12 @@ const props = defineProps({
 .slide-content {
   position: relative;
   z-index: 1;
-  padding: 2rem;
+  padding: 2rem 2rem 0rem 2rem; /* Bottom padding set to 0 */
   width: 100%;
   height: 100%;
+  overflow: hidden; /* Prevent content from pushing south off screen */
+  display: flex;
+  flex-direction: column;
 }
 
 .slide-content.no-padding {

@@ -1,12 +1,17 @@
+<!-- PriceElasticitySlide.vue -->
 <template>
   <SlideLayout>
-    <h1>How Price Affects Demand</h1>
-    <p class="subtitle">Interactive demo: adjust the price and see demand change</p>
+    <header class="slide-header">
+      <h1>How Price Affects Demand</h1>
+      <p class="subtitle">
+        Interactive demo: adjust the price and see demand change
+      </p>
+    </header>
 
-    <div class="demo-container">
-      <!-- Left: Interactive Controls -->
-      <div class="controls-panel">
-        <div class="price-control">
+    <div class="demo">
+      <!-- LEFT COLUMN -->
+      <section class="left">
+        <div class="card price-control">
           <label class="control-label">Set Your Price</label>
           <div class="price-display">${{ price }}</div>
           <input
@@ -18,76 +23,105 @@
             class="price-slider"
           />
           <div class="price-range">
-            <span>$140</span>
-            <span>MSRP: $180</span>
-            <span>$210</span>
+            <span>$140</span><span>MSRP: $180</span><span>$210</span>
           </div>
         </div>
 
-        <div class="metrics">
-          <div class="metric-card">
-            <div class="metric-label">Demand Multiplier</div>
-            <div class="metric-value">{{ multiplier.toFixed(2) }}×</div>
-            <div class="metric-change" :class="changeClass">
-              {{ changeText }}
-            </div>
-          </div>
+        <CellStack class="card grow">
+          <MetricCell
+            align="left"
+            line1="Demand Multiplier"
+            :line2="`${multiplier.toFixed(2)}×`"
+            :line3="changeText"
+          />
+          <MetricCell
+            align="left"
+            line1="Daily Pairs"
+            :line2="`${dailyPairs}`"
+            line3="at baseline 60/day"
+          />
+          <MetricCell
+            align="left"
+            line1="Revenue Impact"
+            :line2="`${revenueChange > 0 ? '+' : ''}${revenueChange}%`"
+            line3="vs. MSRP"
+          />
+          <MetricCell
+            align="left"
+            line1="💡 Insight"
+            :line2="insight"
+            line3=""
+          />
+        </CellStack>
+      </section>
 
-          <div class="metric-card">
-            <div class="metric-label">Daily Pairs</div>
-            <div class="metric-value">{{ dailyPairs }}</div>
-            <div class="metric-subtext">at baseline 60/day</div>
-          </div>
-
-          <div class="metric-card">
-            <div class="metric-label">Revenue Impact</div>
-            <div class="metric-value">{{ revenueChange > 0 ? '+' : '' }}{{ revenueChange }}%</div>
-            <div class="metric-subtext">vs. MSRP</div>
-          </div>
-        </div>
-
-        <div class="insight-box" :class="insightClass">
-          <strong>💡 Insight:</strong> {{ insight }}
-        </div>
-      </div>
-
-      <!-- Right: Visual Chart -->
-      <div class="chart-panel">
-        <svg ref="chartSvg" class="elasticity-chart" viewBox="0 0 400 300">
-          <!-- Grid lines -->
+      <!-- RIGHT COLUMN -->
+      <section class="right">
+        <!-- Pure responsive SVG: fills the cell, no JS scaling needed -->
+        <svg
+          class="chart"
+          viewBox="0 0 400 300"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <!-- grid -->
           <g class="grid">
-            <line v-for="i in 5" :key="'h-' + i"
-              :x1="60" :y1="40 + i * 50"
-              :x2="380" :y2="40 + i * 50"
-              stroke="rgba(255,255,255,0.1)" stroke-dasharray="2,2" />
-            <line v-for="i in 6" :key="'v-' + i"
-              :x1="60 + i * 53" :y1="40"
-              :x2="60 + i * 53" :y2="290"
-              stroke="rgba(255,255,255,0.1)" stroke-dasharray="2,2" />
+            <line
+              v-for="i in 5"
+              :key="'h-' + i"
+              :x1="60"
+              :y1="40 + i * 50"
+              :x2="380"
+              :y2="40 + i * 50"
+              stroke="rgba(255,255,255,0.1)"
+              stroke-dasharray="2,2"
+            />
+            <line
+              v-for="i in 6"
+              :key="'v-' + i"
+              :x1="60 + i * 53"
+              :y1="40"
+              :x2="60 + i * 53"
+              :y2="290"
+              stroke="rgba(255,255,255,0.2)"
+              stroke-dasharray="4,4"
+            />
           </g>
 
-          <!-- Axes -->
-          <line x1="60" y1="290" x2="380" y2="290" stroke="#9ca3af" stroke-width="2" />
-          <line x1="60" y1="40" x2="60" y2="290" stroke="#9ca3af" stroke-width="2" />
+          <!-- axes -->
+          <line
+            x1="60"
+            y1="290"
+            x2="380"
+            y2="290"
+            stroke="#e5e7eb"
+            stroke-width="2"
+          />
+          <line
+            x1="60"
+            y1="40"
+            x2="60"
+            y2="290"
+            stroke="#e5e7eb"
+            stroke-width="2"
+          />
 
-          <!-- Labels -->
-          <text x="220" y="315" fill="#9ca3af" text-anchor="middle" font-size="12">Price ($)</text>
-          <text x="30" y="165" fill="#9ca3af" text-anchor="middle" font-size="12" transform="rotate(-90 30 165)">Demand</text>
+          <!-- Axis labels only - no ticks -->
+          <text x="220" y="295" fill="#9ca3af" text-anchor="middle" font-size="9">
+            Price →
+          </text>
+          <text x="40" y="165" fill="#9ca3af" text-anchor="middle" font-size="9" transform="rotate(-90 40 165)">
+            ← Demand
+          </text>
 
-          <!-- Price axis labels -->
-          <text x="60" y="305" fill="#9ca3af" text-anchor="middle" font-size="10">$140</text>
-          <text x="220" y="305" fill="#9ca3af" text-anchor="middle" font-size="10">$180</text>
-          <text x="380" y="305" fill="#9ca3af" text-anchor="middle" font-size="10">$210</text>
+          <!-- curve + fill -->
+          <path :d="curvePath" fill="none" stroke="#60a5fa" stroke-width="2.5" />
+          <path :d="curvePath" fill="url(#gradient)" opacity="0.15" />
 
-          <!-- Elasticity curve -->
-          <path :d="curvePath" fill="none" stroke="#3b82f6" stroke-width="3" />
-          <path :d="curvePath" fill="url(#gradient)" opacity="0.2" />
-
-          <!-- Current point -->
+          <!-- current point -->
           <circle
             :cx="currentX"
             :cy="currentY"
-            r="8"
+            r="6"
             fill="#10b981"
             stroke="#fff"
             stroke-width="2"
@@ -95,14 +129,15 @@
           />
           <text
             :x="currentX"
-            :y="currentY - 15"
+            :y="currentY - 12"
             fill="#10b981"
             text-anchor="middle"
-            font-size="12"
+            font-size="10"
             font-weight="bold"
-          >You</text>
+          >
+            You
+          </text>
 
-          <!-- Gradient definition -->
           <defs>
             <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3" />
@@ -110,159 +145,145 @@
             </linearGradient>
           </defs>
         </svg>
-      </div>
+      </section>
     </div>
   </SlideLayout>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import SlideLayout from '../components/SlideLayout.vue'
+import { ref, computed } from "vue";
+import SlideLayout from "../components/SlideLayout.vue";
 
-const price = ref(180)
-const MSRP = 180
-const ELASTICITY = -1.2 // Price elasticity coefficient
+const price = ref(180);
+const MSRP = 180;
+const ELASTICITY = -1.2;
 
-// Calculate demand multiplier
-const multiplier = computed(() => Math.pow(price.value / MSRP, ELASTICITY))
-
-// Calculate daily pairs sold
-const dailyPairs = computed(() => Math.round(60 * multiplier.value))
-
-// Calculate revenue change vs MSRP
+const multiplier = computed(() => Math.pow(price.value / MSRP, ELASTICITY));
+const dailyPairs = computed(() => Math.round(60 * multiplier.value));
 const revenueChange = computed(() => {
-  const msrpRevenue = MSRP * 60
-  const currentRevenue = price.value * dailyPairs.value
-  return Math.round(((currentRevenue - msrpRevenue) / msrpRevenue) * 100)
-})
+  const msrpRevenue = MSRP * 60;
+  const currentRevenue = price.value * dailyPairs.value;
+  return Math.round(((currentRevenue - msrpRevenue) / msrpRevenue) * 100);
+});
 
-// Change text and class
 const changeText = computed(() => {
-  const priceDiff = price.value - MSRP
-  if (priceDiff === 0) return 'at MSRP'
-  const pct = Math.round((Math.abs(priceDiff) / MSRP) * 100)
-  return priceDiff > 0 ? `${pct}% above MSRP` : `${pct}% below MSRP`
-})
+  const d = price.value - MSRP;
+  if (d === 0) return "at MSRP";
+  const pct = Math.round((Math.abs(d) / MSRP) * 100);
+  return d > 0 ? `${pct}% above MSRP` : `${pct}% below MSRP`;
+});
+const changeClass = computed(() =>
+  price.value > MSRP ? "negative" : price.value < MSRP ? "positive" : "neutral"
+);
 
-const changeClass = computed(() => {
-  if (price.value > MSRP) return 'negative'
-  if (price.value < MSRP) return 'positive'
-  return 'neutral'
-})
-
-// Insight based on current price
 const insight = computed(() => {
-  if (price.value < 160) {
-    return 'Deep discount drives high volume, but may hurt brand perception'
-  } else if (price.value < 175) {
-    return 'Moderate discount increases volume with minimal brand risk'
-  } else if (price.value >= 175 && price.value <= 185) {
-    return 'Sweet spot: balances demand and margin'
-  } else if (price.value <= 195) {
-    return 'Premium pricing reduces volume but maintains margins'
-  } else {
-    return 'High price may severely limit demand'
-  }
-})
+  if (price.value < 160)
+    return "Deep discount drives high volume, but may hurt brand perception";
+  if (price.value < 175)
+    return "Moderate discount increases volume with minimal brand risk";
+  if (price.value <= 185) return "Sweet spot: balances demand and margin";
+  if (price.value <= 195)
+    return "Premium pricing reduces volume but maintains margins";
+  return "High price may severely limit demand";
+});
+const insightClass = computed(() =>
+  price.value >= 175 && price.value <= 185
+    ? "sweet-spot"
+    : price.value < 160 || price.value > 200
+      ? "warning"
+      : "neutral"
+);
 
-const insightClass = computed(() => {
-  if (price.value >= 175 && price.value <= 185) return 'sweet-spot'
-  if (price.value < 160 || price.value > 200) return 'warning'
-  return 'neutral'
-})
-
-// SVG curve path for elasticity
 const curvePath = computed(() => {
-  const points = []
+  const pts = [];
   for (let p = 140; p <= 210; p += 2) {
-    const x = 60 + ((p - 140) / 70) * 320
-    const mult = Math.pow(p / MSRP, ELASTICITY)
-    const demand = mult * 100 // Scale for display
-    const y = 290 - (demand * 2.5) // Invert Y and scale
-    points.push(`${x},${y}`)
+    const x = 60 + ((p - 140) / 70) * 320;
+    const mult = Math.pow(p / MSRP, ELASTICITY);
+    const demand = mult * 100;
+    const y = 250 - demand * 1.5;
+    pts.push(`${x},${y}`);
   }
-  return `M${points.join(' L')} L380,290 L60,290 Z`
-})
-
-// Current point position
-const currentX = computed(() => 60 + ((price.value - 140) / 70) * 320)
-const currentY = computed(() => 290 - (multiplier.value * 100 * 2.5))
+  return `M${pts.join(" L")} L380,290 L60,290 Z`;
+});
+const currentX = computed(() => 60 + ((price.value - 140) / 70) * 320);
+const currentY = computed(() => 250 - multiplier.value * 100 * 1.5);
 </script>
 
 <style scoped>
+/* --- overall header + grid --- */
+.slide-header {
+  flex-shrink: 0;
+  margin-bottom: 0.75rem;
+}
+.slide-header h1 {
+  margin: 0 0 0.5rem 0;
+}
 .subtitle {
   font-size: 1rem;
   opacity: 0.9;
-  margin-bottom: 1.5rem;
+  margin: 0;
 }
 
-.demo-container {
+/* 2-column grid that fills the slide */
+.demo {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  height: 70vh;
-}
-
-.controls-panel {
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: 1fr 1fr; /* even split */
   gap: 1.5rem;
+  height: 100%;
+  min-height: 0; /* allow grid children to shrink */
 }
 
-.price-control {
+/* columns */
+.left,
+.right {
+  min-height: 0;
+}
+
+/* left column stacks two blocks:
+   1) fixed-height price control (auto)
+   2) growable/scrollable metrics+insight (1fr) */
+.left {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 0.75rem;
+  min-height: 0;
+}
+
+.card {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
-  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.5rem;
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-height: 0;
 }
 
+/* grow to fill space */
+.grow {
+  min-height: 0;
+}
+
+/* controls */
 .control-label {
   display: block;
   font-size: 0.9rem;
   opacity: 0.8;
   margin-bottom: 0.5rem;
 }
-
 .price-display {
-  font-size: 3rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #3b82f6;
-  margin-bottom: 1rem;
+  margin-bottom: 0.4rem;
   text-align: center;
 }
-
 .price-slider {
   width: 100%;
   height: 8px;
   border-radius: 5px;
-  background: linear-gradient(to right, #10b981, #3b82f6, #ef4444);
-  outline: none;
-  -webkit-appearance: none;
+  background: linear-gradient(90deg, #10b981, #3b82f6, #ef4444);
   margin-bottom: 0.5rem;
 }
-
-.price-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.price-slider::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  border: none;
-}
-
 .price-range {
   display: flex;
   justify-content: space-between;
@@ -270,97 +291,91 @@ const currentY = computed(() => 290 - (multiplier.value * 100 * 2.5))
   opacity: 0.6;
 }
 
+/* metrics */
 .metrics {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: 0.4rem;
+  min-height: 0;
 }
-
 .metric-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1rem;
+  border-radius: 6px;
+  padding: 0.4rem;
 }
-
 .metric-label {
   font-size: 0.8rem;
   opacity: 0.7;
   margin-bottom: 0.25rem;
 }
-
 .metric-value {
-  font-size: 2rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #fff;
 }
-
 .metric-change {
   font-size: 0.85rem;
   margin-top: 0.25rem;
 }
-
 .metric-change.positive {
   color: #10b981;
 }
-
 .metric-change.negative {
   color: #ef4444;
 }
-
 .metric-change.neutral {
   color: #9ca3af;
 }
-
 .metric-subtext {
   font-size: 0.75rem;
   opacity: 0.6;
   margin-top: 0.25rem;
 }
 
+/* insight */
 .insight-box {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  border-radius: 6px;
+  padding: 0.4rem;
   background: rgba(59, 130, 246, 0.1);
   border: 1px solid rgba(59, 130, 246, 0.3);
-  border-radius: 8px;
-  padding: 1rem;
-  font-size: 0.9rem;
-  line-height: 1.5;
 }
-
 .insight-box.sweet-spot {
   background: rgba(16, 185, 129, 0.1);
   border-color: rgba(16, 185, 129, 0.3);
 }
-
 .insight-box.warning {
   background: rgba(239, 68, 68, 0.1);
   border-color: rgba(239, 68, 68, 0.3);
 }
 
-.chart-panel {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1rem;
+/* right column chart fills its cell */
+.right {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
 }
-
-.elasticity-chart {
+.chart {
   width: 100%;
   height: 100%;
+  filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.3));
 }
-
 .current-point {
   filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
   animation: pulse 2s ease-in-out infinite;
 }
-
 @keyframes pulse {
-  0%, 100% { r: 8; }
-  50% { r: 10; }
+  0%,
+  100% {
+    r: 8;
+  }
+  50% {
+    r: 10;
+  }
 }
 </style>

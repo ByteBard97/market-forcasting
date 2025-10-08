@@ -24,6 +24,8 @@ import DiveDeeperSlide from "../slides/DiveDeeperSlide.vue";
 // Import component library from components/ folder
 import SlideLayout from "../components/SlideLayout.vue";
 import TwoColumnSlide from "../components/TwoColumnSlide.vue";
+import AutoScaleContainer from "../components/AutoScaleContainer.vue";
+import AutoFit from "../components/AutoFit.vue";
 import DataSphereBackground from "../components/DataSphereBackground.vue";
 import MorphingDotsBackground from "../components/MorphingDotsBackground.vue";
 import PerlinNoiseBackground from "../components/PerlinNoiseBackground.vue";
@@ -39,6 +41,8 @@ import AnimatedTimeline from "../components/AnimatedTimeline.vue";
 import ComponentsStack from "../components/ComponentsStack.vue";
 import ModelBars from "../components/ModelBars.vue";
 import ModelPredictions from "../components/ModelPredictions.vue";
+import MetricCell from "../components/MetricCell.vue";
+import CellStack from "../components/CellStack.vue";
 
 export default defineAppSetup(({ app }) => {
   // Register slide components from slides/ folder
@@ -65,6 +69,8 @@ export default defineAppSetup(({ app }) => {
   // Register supporting components from components/ folder
   app.component("SlideLayout", SlideLayout);
   app.component("TwoColumnSlide", TwoColumnSlide);
+  app.component("AutoScaleContainer", AutoScaleContainer);
+  app.component("AutoFit", AutoFit);
 
   // Register chart components
   app.component("DemandOverviewChart", DemandOverviewChart);
@@ -75,6 +81,8 @@ export default defineAppSetup(({ app }) => {
   app.component("ComponentsStack", ComponentsStack);
   app.component("ModelBars", ModelBars);
   app.component("ModelPredictions", ModelPredictions);
+  app.component("MetricCell", MetricCell);
+  app.component("CellStack", CellStack);
 
   // Register background components
   app.component("DataSphereBackground", DataSphereBackground);

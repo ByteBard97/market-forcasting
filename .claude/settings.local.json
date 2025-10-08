@@ -69,7 +69,8 @@
       "mcp__chrome-devtools__fill",
       "Bash(for i in {1..19})",
       "Bash(do echo \"Slide $i\")",
-      "Bash(for i in {5..19})"
+      "Bash(for i in {5..19})",
+      "WebFetch(domain:revealjs.com)"
     ],
     "deny": [],
     "ask": []

@@ -1,3 +1,8 @@
+/* Override Slidev's default layout padding */
+.slidev-layout.default {
+  padding-bottom: 10px !important; /* Cut from 40px to 10px */
+}
+
 /* Container Query support for responsive slides */
 
 .container-cq {
