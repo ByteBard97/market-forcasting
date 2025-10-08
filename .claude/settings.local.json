@@ -70,7 +70,8 @@
       "Bash(for i in {1..19})",
       "Bash(do echo \"Slide $i\")",
       "Bash(for i in {5..19})",
-      "WebFetch(domain:revealjs.com)"
+      "WebFetch(domain:revealjs.com)",
+      "Read(//tmp/**)"
     ],
     "deny": [],
     "ask": []

@@ -31,9 +31,11 @@
   "dependencies": {
     "@tsparticles/slim": "^3.9.1",
     "@tsparticles/vue3": "^3.0.1",
+    "auto-text-size": "^0.2.3",
     "chart.js": "^4.5.0",
     "chartjs-adapter-date-fns": "^3.0.0",
     "echarts": "^6.0.0",
+    "fitty": "^2.4.2",
     "glslCanvas": "^0.2.6",
     "gsap": "^3.13.0",
     "simplex-noise": "^4.0.3",

@@ -49,102 +49,21 @@
           <MetricCell
             align="left"
             line1="💡 Insight"
-            :line2="insight"
-            line3=""
+            :line2="insightBold"
+            :line3="insightDetail"
           />
         </CellStack>
       </section>
 
       <!-- RIGHT COLUMN -->
       <section class="right">
-        <!-- Pure responsive SVG: fills the cell, no JS scaling needed -->
-        <svg
-          class="chart"
-          viewBox="0 0 400 300"
-          preserveAspectRatio="xMidYMid meet"
-        >
-          <!-- grid -->
-          <g class="grid">
-            <line
-              v-for="i in 5"
-              :key="'h-' + i"
-              :x1="60"
-              :y1="40 + i * 50"
-              :x2="380"
-              :y2="40 + i * 50"
-              stroke="rgba(255,255,255,0.1)"
-              stroke-dasharray="2,2"
-            />
-            <line
-              v-for="i in 6"
-              :key="'v-' + i"
-              :x1="60 + i * 53"
-              :y1="40"
-              :x2="60 + i * 53"
-              :y2="290"
-              stroke="rgba(255,255,255,0.2)"
-              stroke-dasharray="4,4"
-            />
-          </g>
-
-          <!-- axes -->
-          <line
-            x1="60"
-            y1="290"
-            x2="380"
-            y2="290"
-            stroke="#e5e7eb"
-            stroke-width="2"
-          />
-          <line
-            x1="60"
-            y1="40"
-            x2="60"
-            y2="290"
-            stroke="#e5e7eb"
-            stroke-width="2"
-          />
-
-          <!-- Axis labels only - no ticks -->
-          <text x="220" y="295" fill="#9ca3af" text-anchor="middle" font-size="9">
-            Price →
-          </text>
-          <text x="40" y="165" fill="#9ca3af" text-anchor="middle" font-size="9" transform="rotate(-90 40 165)">
-            ← Demand
-          </text>
-
-          <!-- curve + fill -->
-          <path :d="curvePath" fill="none" stroke="#60a5fa" stroke-width="2.5" />
-          <path :d="curvePath" fill="url(#gradient)" opacity="0.15" />
-
-          <!-- current point -->
-          <circle
-            :cx="currentX"
-            :cy="currentY"
-            r="6"
-            fill="#10b981"
-            stroke="#fff"
-            stroke-width="2"
-            class="current-point"
-          />
-          <text
-            :x="currentX"
-            :y="currentY - 12"
-            fill="#10b981"
-            text-anchor="middle"
-            font-size="10"
-            font-weight="bold"
-          >
-            You
-          </text>
-
-          <defs>
-            <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3" />
-              <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
-            </linearGradient>
-          </defs>
-        </svg>
+        <DemandCurveChart
+          :current-price="price"
+          :msrp="MSRP"
+          :elasticity="ELASTICITY"
+          :price-min="140"
+          :price-max="210"
+        />
       </section>
     </div>
   </SlideLayout>
@@ -153,6 +72,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import SlideLayout from "../components/SlideLayout.vue";
+import DemandCurveChart from "../components/DemandCurveChart.vue";
 
 const price = ref(180);
 const MSRP = 180;
@@ -176,15 +96,20 @@ const changeClass = computed(() =>
   price.value > MSRP ? "negative" : price.value < MSRP ? "positive" : "neutral"
 );
 
-const insight = computed(() => {
-  if (price.value < 160)
-    return "Deep discount drives high volume, but may hurt brand perception";
-  if (price.value < 175)
-    return "Moderate discount increases volume with minimal brand risk";
-  if (price.value <= 185) return "Sweet spot: balances demand and margin";
-  if (price.value <= 195)
-    return "Premium pricing reduces volume but maintains margins";
-  return "High price may severely limit demand";
+const insightBold = computed(() => {
+  if (price.value < 160) return "Deep discount:";
+  if (price.value < 175) return "Moderate discount:";
+  if (price.value <= 185) return "Sweet spot:";
+  if (price.value <= 195) return "Premium pricing:";
+  return "High price:";
+});
+
+const insightDetail = computed(() => {
+  if (price.value < 160) return "drives high volume, but may hurt brand perception";
+  if (price.value < 175) return "increases volume with minimal brand risk";
+  if (price.value <= 185) return "balances demand and margin";
+  if (price.value <= 195) return "reduces volume but maintains margins";
+  return "may severely limit demand";
 });
 const insightClass = computed(() =>
   price.value >= 175 && price.value <= 185
@@ -193,20 +118,6 @@ const insightClass = computed(() =>
       ? "warning"
       : "neutral"
 );
-
-const curvePath = computed(() => {
-  const pts = [];
-  for (let p = 140; p <= 210; p += 2) {
-    const x = 60 + ((p - 140) / 70) * 320;
-    const mult = Math.pow(p / MSRP, ELASTICITY);
-    const demand = mult * 100;
-    const y = 250 - demand * 1.5;
-    pts.push(`${x},${y}`);
-  }
-  return `M${pts.join(" L")} L380,290 L60,290 Z`;
-});
-const currentX = computed(() => 60 + ((price.value - 140) / 70) * 320);
-const currentY = computed(() => 250 - multiplier.value * 100 * 1.5);
 </script>
 
 <style scoped>
@@ -359,23 +270,6 @@ const currentY = computed(() => 250 - multiplier.value * 100 * 1.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 1rem;
-}
-.chart {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.3));
-}
-.current-point {
-  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%,
-  100% {
-    r: 8;
-  }
-  50% {
-    r: 10;
-  }
+  min-height: 0;
 }
 </style>
