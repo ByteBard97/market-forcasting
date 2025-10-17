@@ -255,16 +255,16 @@ onUnmounted(() => {
 
 <style scoped>
 .subtitle {
-  font-size: 1rem;
+  font-size: 0.9rem;
   opacity: 0.9;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .wave-container {
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: 0.5rem;
+  margin-top: 0.3rem;
   container-type: size;
   flex: 1;
   min-height: 0;
@@ -272,9 +272,10 @@ onUnmounted(() => {
 
 .wave-row {
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 1rem;
+  grid-template-columns: 180px 1fr;
+  gap: 1.5rem;
   align-items: center;
+  margin-bottom: 0.3rem;
 }
 
 .wave-label {
@@ -285,16 +286,16 @@ onUnmounted(() => {
 
 .wave-name {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .wave-desc {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   opacity: 0.6;
 }
 
 .wave-freq {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   font-family: 'Fira Code', monospace;
   opacity: 0.8;
@@ -303,7 +304,7 @@ onUnmounted(() => {
 
 .wave-canvas {
   width: 100%;
-  height: 12cqh;
+  height: 8cqh;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
@@ -336,7 +337,7 @@ onUnmounted(() => {
 }
 
 .result-canvas {
-  height: 15cqh;
+  height: 10cqh;
   background: rgba(168, 85, 247, 0.08);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(168, 85, 247, 0.3);
