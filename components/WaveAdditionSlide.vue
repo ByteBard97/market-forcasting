@@ -14,11 +14,6 @@
         <canvas :ref="el => waveCanvases[i] = el" class="wave-canvas" :style="{ borderColor: wave.color }"></canvas>
       </div>
 
-      <!-- Addition indicator -->
-      <div class="addition-row">
-        <div class="addition-symbol">+</div>
-      </div>
-
       <!-- Result wave -->
       <div class="wave-row result-row">
         <div class="wave-label">
@@ -212,30 +207,72 @@ const animate = () => {
 }
 
 const setupCanvases = () => {
+  console.log('=== setupCanvases called ===')
+  console.log('Wave canvases count:', waveCanvases.value.length)
+  console.log('Result canvas exists:', !!resultCanvas.value)
+
   // Setup individual wave canvases
-  waveCanvases.value.forEach(canvas => {
+  waveCanvases.value.forEach((canvas, index) => {
     if (canvas) {
       const rect = canvas.getBoundingClientRect()
+      console.log(`Wave canvas ${index} rect:`, rect.width, 'x', rect.height)
       canvas.width = rect.width * 2 // High DPI
       canvas.height = rect.height * 2
       canvas.style.width = rect.width + 'px'
       canvas.style.height = rect.height + 'px'
+      console.log(`Wave canvas ${index} configured:`, canvas.width, 'x', canvas.height)
+    } else {
+      console.warn(`Wave canvas ${index} is null!`)
     }
   })
 
   // Setup result canvas
   if (resultCanvas.value) {
     const rect = resultCanvas.value.getBoundingClientRect()
+    console.log('Result canvas rect:', rect.width, 'x', rect.height)
     resultCanvas.value.width = rect.width * 2
     resultCanvas.value.height = rect.height * 2
     resultCanvas.value.style.width = rect.width + 'px'
     resultCanvas.value.style.height = rect.height + 'px'
+    console.log('Result canvas configured:', resultCanvas.value.width, 'x', resultCanvas.value.height)
+  } else {
+    console.warn('Result canvas is null!')
   }
+  console.log('=== setupCanvases complete ===')
+}
+
+const waitForLayout = async (maxAttempts = 10) => {
+  for (let i = 0; i < maxAttempts; i++) {
+    await new Promise(resolve => setTimeout(resolve, 100))
+
+    // Check if any canvas has valid dimensions
+    const firstCanvas = waveCanvases.value[0]
+    if (firstCanvas) {
+      const rect = firstCanvas.getBoundingClientRect()
+      console.log(`Layout check attempt ${i + 1}: canvas dimensions ${rect.width}x${rect.height}`)
+      if (rect.width > 0 && rect.height > 0) {
+        console.log('Layout ready!')
+        return true
+      }
+    }
+  }
+  console.warn('Layout timeout - canvases still have 0 dimensions')
+  return false
 }
 
 const initializeAnimation = async () => {
+  console.log('>>> initializeAnimation START')
+  console.log('Before nextTick - waveCanvases:', waveCanvases.value.length, 'resultCanvas:', !!resultCanvas.value)
+
   await nextTick()
-  await new Promise(resolve => setTimeout(resolve, 200))
+  console.log('After nextTick - waveCanvases:', waveCanvases.value.length, 'resultCanvas:', !!resultCanvas.value)
+
+  // Wait for layout to complete
+  const layoutReady = await waitForLayout()
+  if (!layoutReady) {
+    console.error('Failed to initialize - canvases not laid out')
+    return
+  }
 
   console.log('WaveAdditionSlide: Initializing animation', {
     waveCanvasCount: waveCanvases.value.length,
@@ -246,10 +283,13 @@ const initializeAnimation = async () => {
 
   // Cancel any existing animation
   if (animationId) {
+    console.log('Canceling existing animation:', animationId)
     cancelAnimationFrame(animationId)
   }
 
+  console.log('Starting animation...')
   animate()
+  console.log('>>> initializeAnimation END - animationId:', animationId)
 }
 
 onMounted(() => {
@@ -273,17 +313,20 @@ onUnmounted(() => {
 .subtitle {
   font-size: 0.9rem;
   opacity: 0.9;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
 }
 
 .wave-container {
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: 0.3rem;
+  margin-top: 0;
+  margin-bottom: 0;
   container-type: size;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
+  padding-right: 10px;
 }
 
 .wave-row {
@@ -291,7 +334,7 @@ onUnmounted(() => {
   grid-template-columns: 170px 1fr;
   gap: 1rem;
   align-items: center;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0;
 }
 
 .wave-label {
@@ -320,19 +363,21 @@ onUnmounted(() => {
 
 .wave-canvas {
   width: 100%;
-  height: 12cqh;
+  max-width: 100%;
+  height: 13cqh;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 .addition-row {
   display: flex;
   justify-content: center;
   padding: 0;
-  margin: 0.1rem 0;
+  margin: 0;
 }
 
 .addition-symbol {
@@ -342,8 +387,9 @@ onUnmounted(() => {
 }
 
 .result-row {
-  margin-top: 0;
-  padding-top: 0.2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  padding-top: 0.5rem;
   border-top: 2px dashed rgba(255, 255, 255, 0.2);
 }
 
@@ -353,7 +399,7 @@ onUnmounted(() => {
 }
 
 .result-canvas {
-  height: 15cqh;
+  height: 16cqh;
   background: rgba(168, 85, 247, 0.08);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(168, 85, 247, 0.3);
@@ -361,7 +407,7 @@ onUnmounted(() => {
 }
 
 .explanation {
-  margin-top: 0.1rem;
+  margin-top: 0;
   text-align: center;
   font-size: 0.75rem;
   opacity: 0.7;
