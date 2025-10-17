@@ -1,0 +1,1 @@
+# Clearing docs folder
