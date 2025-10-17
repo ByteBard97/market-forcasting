@@ -272,10 +272,10 @@ onUnmounted(() => {
 
 .wave-row {
   display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 1.5rem;
+  grid-template-columns: 170px 1fr;
+  gap: 1rem;
   align-items: center;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.2rem;
 }
 
 .wave-label {
@@ -304,7 +304,7 @@ onUnmounted(() => {
 
 .wave-canvas {
   width: 100%;
-  height: 8cqh;
+  height: 6cqh;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
@@ -316,7 +316,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   padding: 0;
-  margin: 0;
+  margin: 0.1rem 0;
 }
 
 .addition-symbol {
@@ -326,8 +326,8 @@ onUnmounted(() => {
 }
 
 .result-row {
-  margin-top: -0.5rem;
-  padding-top: 0.3rem;
+  margin-top: 0;
+  padding-top: 0.2rem;
   border-top: 2px dashed rgba(255, 255, 255, 0.2);
 }
 
@@ -337,7 +337,7 @@ onUnmounted(() => {
 }
 
 .result-canvas {
-  height: 10cqh;
+  height: 8cqh;
   background: rgba(168, 85, 247, 0.08);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(168, 85, 247, 0.3);
@@ -345,9 +345,9 @@ onUnmounted(() => {
 }
 
 .explanation {
-  margin-top: 0.2rem;
+  margin-top: 0.1rem;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   opacity: 0.7;
   font-style: italic;
 }
