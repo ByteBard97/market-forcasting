@@ -26,11 +26,19 @@ const props = defineProps({
 const cellEl = ref(null)
 const textEl = ref(null)
 let cleanup = null
+let observer = null
+let hasInitialized = false
 
 async function fitText() {
   if (!textEl.value || !cellEl.value) return
 
   await nextTick()
+
+  // Check if element has valid dimensions
+  if (cellEl.value.clientHeight === 0 || cellEl.value.clientWidth === 0) {
+    console.log(`MetricCell [${props.line1}] has 0 dimensions, skipping fitText`)
+    return
+  }
 
   // Set a much larger maxFontSize to allow upscaling
   // The library will automatically shrink to fit width constraints
@@ -49,15 +57,29 @@ async function fitText() {
     fontSizePrecisionPx: 0.5
   })
 
+  hasInitialized = true
   console.log(`auto-text-size applied for [${props.line1}]`)
 }
 
 onMounted(() => {
   fitText()
+
+  // Set up IntersectionObserver to retry when component becomes visible
+  if (cellEl.value && !hasInitialized) {
+    observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !hasInitialized) {
+        console.log(`MetricCell [${props.line1}] became visible, retrying fitText`)
+        fitText()
+      }
+    }, { threshold: 0.1 })
+
+    observer.observe(cellEl.value)
+  }
 })
 
 onUnmounted(() => {
   if (cleanup) cleanup()
+  if (observer) observer.disconnect()
 })
 
 // Re-fit when content changes
