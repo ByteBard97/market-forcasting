@@ -73,6 +73,8 @@
 import { ref, computed } from "vue";
 import SlideLayout from "../components/SlideLayout.vue";
 import DemandCurveChart from "../components/DemandCurveChart.vue";
+import CellStack from "../components/CellStack.vue";
+import MetricCell from "../components/MetricCell.vue";
 
 const price = ref(180);
 const MSRP = 180;
