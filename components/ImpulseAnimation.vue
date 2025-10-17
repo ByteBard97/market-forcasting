@@ -62,9 +62,9 @@ onMounted(() => {
         v-for="i in 10"
         :key="i"
         :x="i * 8"
-        :y="80 - Math.sin(i / 2) * 60"
+        :y="80 - Math.abs(Math.sin(i / 2)) * 60"
         width="6"
-        :height="Math.sin(i / 2) * 60 + 5"
+        :height="Math.abs(Math.sin(i / 2)) * 60 + 5"
         fill="#22c55e"
         opacity="0.8"
       />

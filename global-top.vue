@@ -51,10 +51,23 @@ function computeAndApplyScale() {
 }
 
 onMounted(() => {
-  // Wait for DOM to settle
-  setTimeout(() => {
+  // Multiple attempts to ensure background loads
+  const attemptInit = () => {
     computeAndApplyScale();
-  }, 100);
+
+    // Log background status for debugging
+    const bgContainer = document.querySelector(".global-background-container");
+    if (bgContainer) {
+      console.log('Global background container found and initialized');
+    } else {
+      console.warn('Global background container not found, will retry');
+    }
+  };
+
+  // Initial attempts at different timings to catch Slidev initialization
+  setTimeout(attemptInit, 50);
+  setTimeout(attemptInit, 200);
+  setTimeout(attemptInit, 500);
 
   // Recompute on window resize
   window.addEventListener("resize", computeAndApplyScale);

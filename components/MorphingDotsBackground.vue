@@ -46,8 +46,22 @@ let mouse = new THREE.Vector2(0.8, 0.5)
 let animationId, attributePositions
 
 onMounted(async () => {
+  // Wait for DOM to be fully ready
+  await new Promise(resolve => setTimeout(resolve, 100))
+
+  if (!canvas.value) {
+    console.warn('MorphingDots canvas not available')
+    return
+  }
+
   const width = window.innerWidth
   const height = window.innerHeight
+
+  // Validate dimensions
+  if (width <= 0 || height <= 0) {
+    console.warn('Invalid viewport dimensions for MorphingDots')
+    return
+  }
 
   // Setup renderer
   renderer = new THREE.WebGLRenderer({
@@ -65,12 +79,31 @@ onMounted(async () => {
   camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 2000)
   camera.position.set(0, 0, 80)
 
-  // Load texture
+  // Load texture with proper base URL
   const baseUrl = import.meta.env.BASE_URL || '/'
+  const texturePath = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}dotTexture.png`
+  console.log('Loading MorphingDots texture from:', texturePath)
+
   const loader = new THREE.TextureLoader()
-  const dotTexture = await new Promise((resolve) => {
-    loader.load(`${baseUrl}dotTexture.png`, resolve)
+  const dotTexture = await new Promise((resolve, reject) => {
+    loader.load(
+      texturePath,
+      resolve,
+      undefined,
+      (error) => {
+        console.error('Failed to load MorphingDots texture:', error)
+        reject(error)
+      }
+    )
+  }).catch(err => {
+    console.error('MorphingDots texture load failed')
+    return null
   })
+
+  if (!dotTexture) {
+    console.warn('MorphingDots texture not loaded, aborting initialization')
+    return
+  }
 
   // Create sphere geometry
   const radius = 50
