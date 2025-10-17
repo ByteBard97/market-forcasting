@@ -260,6 +260,9 @@ const waitForLayout = async (maxAttempts = 10) => {
   return false
 }
 
+let isInitialized = false
+let observer = null
+
 const initializeAnimation = async () => {
   console.log('>>> initializeAnimation START')
   console.log('Before nextTick - waveCanvases:', waveCanvases.value.length, 'resultCanvas:', !!resultCanvas.value)
@@ -288,24 +291,47 @@ const initializeAnimation = async () => {
   }
 
   console.log('Starting animation...')
+  isInitialized = true
   animate()
   console.log('>>> initializeAnimation END - animationId:', animationId)
 }
 
 onMounted(() => {
   console.log('WaveAdditionSlide mounted')
+
+  // Try immediate initialization
   initializeAnimation()
+
+  // Also set up IntersectionObserver to retry when component becomes visible
+  if (waveCanvases.value[0] && !isInitialized) {
+    observer = new IntersectionObserver((entries) => {
+      console.log('IntersectionObserver triggered, visible:', entries[0].isIntersecting)
+      if (entries[0].isIntersecting && !isInitialized) {
+        console.log('Component became visible, retrying initialization')
+        initializeAnimation()
+      }
+    }, { threshold: 0.1 })
+
+    observer.observe(waveCanvases.value[0])
+  }
 })
 
 onActivated(() => {
   console.log('WaveAdditionSlide activated')
-  initializeAnimation()
+  if (!isInitialized) {
+    initializeAnimation()
+  }
 })
 
 onUnmounted(() => {
+  console.log('WaveAdditionSlide unmounted')
   if (animationId) {
     cancelAnimationFrame(animationId)
   }
+  if (observer) {
+    observer.disconnect()
+  }
+  isInitialized = false
 })
 </script>
 
