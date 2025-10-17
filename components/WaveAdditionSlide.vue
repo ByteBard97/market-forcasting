@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, onActivated, nextTick } from 'vue'
 import SlideLayout from '../components/SlideLayout.vue'
 
 const waveCanvases = ref([])
@@ -233,17 +233,33 @@ const setupCanvases = () => {
   }
 }
 
+const initializeAnimation = async () => {
+  await nextTick()
+  await new Promise(resolve => setTimeout(resolve, 200))
+
+  console.log('WaveAdditionSlide: Initializing animation', {
+    waveCanvasCount: waveCanvases.value.length,
+    resultCanvas: resultCanvas.value
+  })
+
+  setupCanvases()
+
+  // Cancel any existing animation
+  if (animationId) {
+    cancelAnimationFrame(animationId)
+  }
+
+  animate()
+}
+
 onMounted(() => {
   console.log('WaveAdditionSlide mounted')
-  setTimeout(() => {
-    console.log('Setting up canvases...', {
-      waveCanvasCount: waveCanvases.value.length,
-      resultCanvas: resultCanvas.value
-    })
-    setupCanvases()
-    console.log('Starting animation...')
-    animate()
-  }, 100)
+  initializeAnimation()
+})
+
+onActivated(() => {
+  console.log('WaveAdditionSlide activated')
+  initializeAnimation()
 })
 
 onUnmounted(() => {
@@ -304,7 +320,7 @@ onUnmounted(() => {
 
 .wave-canvas {
   width: 100%;
-  height: 6cqh;
+  height: 12cqh;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
@@ -337,7 +353,7 @@ onUnmounted(() => {
 }
 
 .result-canvas {
-  height: 8cqh;
+  height: 15cqh;
   background: rgba(168, 85, 247, 0.08);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(168, 85, 247, 0.3);
