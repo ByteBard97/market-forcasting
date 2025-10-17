@@ -1,5 +1,5 @@
 <template>
-  <div class="title-slide">
+  <SlideLayout background="sphere" no-padding>
     <div class="title-card">
       <h1 class="main-title">Forecasting Air Jordan Demand</h1>
       <p class="subtitle">
@@ -16,19 +16,15 @@
         </span>
       </div>
     </div>
-  </div>
+  </SlideLayout>
 </template>
+
+<script setup>
+import SlideLayout from "../components/SlideLayout.vue";
+</script>
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
-
-.title-slide {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .title-card {
   position: absolute;
