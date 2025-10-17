@@ -24,6 +24,12 @@ function computeAndApplyScale() {
     const actualWidth = rect.width;
     const windowWidth = window.innerWidth;
 
+    // Guard against invalid dimensions
+    if (actualWidth <= 0 || windowWidth <= 0) {
+      console.warn('Invalid dimensions, skipping scale calculation');
+      return;
+    }
+
     // Only apply scale if the background is not filling the viewport
     if (Math.abs(actualWidth - windowWidth) > 1) {
       // Background is not filling viewport, need to compensate

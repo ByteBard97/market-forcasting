@@ -71,7 +71,13 @@
       "Bash(do echo \"Slide $i\")",
       "Bash(for i in {5..19})",
       "WebFetch(domain:revealjs.com)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Bash(xargs basename:*)",
+      "Bash(gh api:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh run list:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git config:*)"
     ],
     "deny": [],
     "ask": []
