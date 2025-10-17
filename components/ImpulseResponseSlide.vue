@@ -1,11 +1,12 @@
 <template>
   <SlideLayout>
-    <h1>Step 4: Impulse Responses</h1>
-    <p class="subtitle">The key to realistic causality</p>
+    <div class="impulse-wrapper">
+      <h1>Step 4: Impulse Responses</h1>
+      <p class="subtitle">The key to realistic causality</p>
 
-    <div class="grid grid-cols-2 gap-6" style="height: 50vh">
-      <div>
-        <h3 class="text-lg font-bold mb-3">Why Impulse Responses?</h3>
+      <div class="grid grid-cols-2 gap-6 content-grid">
+        <div>
+          <h3 class="text-lg font-bold mb-3">Why Impulse Responses?</h3>
         <div class="text-sm space-y-3">
           <div class="bg-red-900 bg-opacity-20 p-3 rounded text-xs">
             <strong>❌ WRONG: Simple Shift</strong><br />
@@ -38,6 +39,7 @@
         ></video>
       </div>
     </div>
+    </div>
   </SlideLayout>
 </template>
 
@@ -52,10 +54,24 @@ const base = computed(() => {
 </script>
 
 <style scoped>
+.impulse-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  container-type: size;
+}
+
 .subtitle {
   font-size: 1.1rem;
   opacity: 0.9;
   margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.content-grid {
+  flex: 1;
+  min-height: 0;
+  height: 60cqh;
 }
 
 .glass-background {
@@ -63,5 +79,6 @@ const base = computed(() => {
   backdrop-filter: blur(3px);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  height: 100%;
 }
 </style>
