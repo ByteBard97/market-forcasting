@@ -7,10 +7,11 @@
       <!-- Individual waves -->
       <div class="wave-row" v-for="(wave, i) in waves" :key="i">
         <div class="wave-label">
-          <span class="wave-name">{{ wave.name }}</span>
+          <span class="wave-name" :style="{ color: wave.color }">{{ wave.name }}</span>
           <span class="wave-desc">{{ wave.description }}</span>
+          <span class="wave-freq">f = {{ wave.frequency }}×</span>
         </div>
-        <canvas :ref="el => waveCanvases[i] = el" class="wave-canvas"></canvas>
+        <canvas :ref="el => waveCanvases[i] = el" class="wave-canvas" :style="{ borderColor: wave.color }"></canvas>
       </div>
 
       <!-- Addition indicator -->
@@ -91,7 +92,7 @@ const drawWave = (canvas, wave, showPoints = false) => {
 
   // Draw wave
   ctx.strokeStyle = wave.color
-  ctx.lineWidth = 2
+  ctx.lineWidth = 3
   ctx.beginPath()
 
   const points = []
@@ -106,11 +107,31 @@ const drawWave = (canvas, wave, showPoints = false) => {
       ctx.lineTo(x, canvasY)
     }
 
-    if (showPoints && x % 40 === 0) {
+    if (showPoints && x % 60 === 0) {
       points.push({ x, y: canvasY })
     }
   }
   ctx.stroke()
+
+  // Draw frequency markers (vertical lines at peaks)
+  ctx.strokeStyle = wave.color
+  ctx.lineWidth = 1
+  ctx.globalAlpha = 0.2
+  for (let x = 0; x < width; x += 2) {
+    const t = (x / width) * Math.PI * 4 + time
+    const y = Math.sin(wave.frequency * t + wave.phase) * wave.amplitude
+    const prevT = ((x - 2) / width) * Math.PI * 4 + time
+    const prevY = Math.sin(wave.frequency * prevT + wave.phase) * wave.amplitude
+
+    // Detect peak (sign change in derivative)
+    if (x > 0 && prevY > y && prevY > 0) {
+      ctx.beginPath()
+      ctx.moveTo(x - 2, 0)
+      ctx.lineTo(x - 2, height)
+      ctx.stroke()
+    }
+  }
+  ctx.globalAlpha = 1.0
 
   // Draw point markers for visual addition
   if (showPoints) {
@@ -272,13 +293,21 @@ onUnmounted(() => {
   opacity: 0.6;
 }
 
+.wave-freq {
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: 'Fira Code', monospace;
+  opacity: 0.8;
+  margin-top: 0.1rem;
+}
+
 .wave-canvas {
   width: 100%;
   height: 12cqh;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
