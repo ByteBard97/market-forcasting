@@ -108,6 +108,19 @@ onActivated(async () => {
 </script>
 
 <style scoped>
+.two-column-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  container-type: size;
+}
+
+.content-grid {
+  flex: 1;
+  min-height: 0;
+  height: 60cqh;
+}
+
 .glass-background {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
@@ -115,5 +128,6 @@ onActivated(async () => {
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 12px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  height: 100%;
 }
 </style>
