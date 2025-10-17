@@ -16,7 +16,8 @@ let chartInstance = null;
 
 onMounted(async () => {
   try {
-    const response = await fetch('/data/AirJordan_NA_DTC.json');
+    const baseUrl = import.meta.env.BASE_URL || '/';
+    const response = await fetch(`${baseUrl}data/AirJordan_NA_DTC.json`);
     const data = await response.json();
 
     // Sample every 7 days for performance
